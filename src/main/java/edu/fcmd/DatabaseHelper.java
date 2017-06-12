@@ -24,6 +24,7 @@ public class DatabaseHelper {
 	static Logger logger;
 
 	public Connection getConnection(){
+		if(connection == null) connect();
 		return connection;
 	}
 
@@ -31,7 +32,7 @@ public class DatabaseHelper {
 		return statement;
 	}
 
-	public DatabaseHelper() {
+	private DatabaseHelper() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -46,7 +47,7 @@ public class DatabaseHelper {
 		this.PASS = pass;
 	}
 
-	public boolean connect(){
+	public void connect(){
 		try {
 			//register jdbc driver
 			Class.forName(JDBC_DRIVER);
@@ -62,16 +63,14 @@ public class DatabaseHelper {
 			int val = statement.executeUpdate(query);
 			logger.info("Database created? {}", val);
 
-			return true;
-
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
+			logger.error("Database connection failed");
 			e.printStackTrace();
-			return false;
+			connection = null;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			logger.error("Database connection failed");
 			e.printStackTrace();
-			return false;
+			connection = null;
 		}
 	}
 

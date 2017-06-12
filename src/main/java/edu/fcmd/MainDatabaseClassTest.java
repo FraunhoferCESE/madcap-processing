@@ -2,12 +2,10 @@ package edu.fcmd;
 
 import static org.junit.Assert.*;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-
 import org.apache.log4j.BasicConfigurator;
+import org.hamcrest.CoreMatchers;
 import org.jooq.DSLContext;
-import org.jooq.Field;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.SQLDialect;
@@ -27,6 +25,8 @@ public class MainDatabaseClassTest {
 	static Logger logger;
 	static DatabaseHelper dbHelper;
 	static DSLContext create;
+	static MSMSData testMsmsData;
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		logger = LoggerFactory.getLogger(MainDatabaseClass.class);
@@ -35,6 +35,10 @@ public class MainDatabaseClassTest {
 		dbHelper = DatabaseHelper.getInstance();
 		dbHelper.init("madcapman","!QAZ@WSX");
 		dbHelper.connect();
+		
+		testMsmsData = new MSMSData(dbHelper.getConnection(), dbHelper.getStatement());
+		
+		create = DSL.using(dbHelper.getConnection(), SQLDialect.MYSQL);
 	}
 
 	@AfterClass
@@ -44,7 +48,7 @@ public class MainDatabaseClassTest {
 
 	@Before
 	public void setUp() throws Exception {
-		create = DSL.using(dbHelper.getConnection(), SQLDialect.MYSQL);
+			
 	}
 
 	@After
@@ -53,63 +57,65 @@ public class MainDatabaseClassTest {
 	}
 
 	@Test
-	public void testTwoDates() {
+	public void testBetweenTimestamps() {
 
-		Result<Record> results = create.select().from(Msmsentry.MSMSENTRY)
-				.where(Msmsentry.MSMSENTRY.TIME_STAMP.between(new Timestamp(0165, 01, 01,0,0,0,0), new Timestamp(0165, 01, 14,0,0,0,0)))
-				.orderBy(Msmsentry.MSMSENTRY.TIME_STAMP)
-				.fetch();
+//		Result<Record> results = create.select().from(Msmsentry.MSMSENTRY)
+//				.where(Msmsentry.MSMSENTRY.TIME_STAMP.between(new Timestamp(0165, 01, 01,0,0,0,0), new Timestamp(0165, 01, 14,0,0,0,0)))
+//				.fetch();
+		
+		Result<Record> results = testMsmsData.queryMSMS(new Timestamp(0165, 01, 01,0,0,0,0), new Timestamp(0165, 01, 14,0,0,0,0));
 		for(Record r : results)
 			assertTrue("Timestamp don't match", r.getValue(Msmsentry.MSMSENTRY.TIME_STAMP).after(new Timestamp(0165, 01, 01, 0,0,0,0)));
 	}
 
 	@Test
-	public void testOneDate() {
-
-		Result<Record> results = create.select().from(Msmsentry.MSMSENTRY)
-				.where(Msmsentry.MSMSENTRY.TIME_STAMP.like("2017-02-01%"))
-				.fetch();
+	public void testStarTimestamps() {
+		Result<Record> results = testMsmsData.queryMSMS(new Timestamp(0165, 02, 01, 0, 0, 0, 0), null);
 		for(Record r : results){
-			assertEquals(r.getValue(Msmsentry.MSMSENTRY.TIME_STAMP), new Timestamp(0165, 01, 01, 0, 0, 0, 0));
+			assertTrue(r.getValue(Msmsentry.MSMSENTRY.TIME_STAMP).after(new Timestamp(0165, 02, 01, 0, 0, 0, 0)));
+		}
+	}
+	
+	@Test
+	public void testEndTimestamp() {
+		Result<Record> results = testMsmsData.queryMSMS(null, new Timestamp(0165, 02, 14, 0, 0, 0, 0));
+		for(Record r : results){
+			assertTrue(r.getValue(Msmsentry.MSMSENTRY.TIME_STAMP).before(new Timestamp(0165, 02, 14, 0, 0, 0, 0)));
+		}
+	}
+	
+	@Test
+	public void testStartDate() {
+		Result<Record> results = testMsmsData.queryMSMS("2017-02-04");
+		for(Record r : results){
+			assertThat(r.getValue(Msmsentry.MSMSENTRY.TIME_STAMP).toString(), CoreMatchers.containsString("2017-02-04"));
 		}
 	}
 
 	@Test
 	public void testReceiveAction(){
-		Result<Record> results = create.select().from(Msmsentry.MSMSENTRY)
-				.where(Msmsentry.MSMSENTRY.ACTION.eq("SMS_RECEIVED_TEXT_BASED"))
-				.fetch();
-
+		Result<Record> results = testMsmsData.queryMSMS("SMS_RECEIVED_TEXT_BASED");
 		for(Record r : results)
 			assertEquals("SMS_RECEIVED_TEXT_BASED", r.getValue(Msmsentry.MSMSENTRY.ACTION));
 	}
 
 	@Test
 	public void testSentAction(){
-		Result<Record> results = create.select().from(Msmsentry.MSMSENTRY)
-				.where(Msmsentry.MSMSENTRY.ACTION.eq("SMS_SENT_TEXT_BASED"))
-				.fetch();
-
+		Result<Record> results = testMsmsData.queryMSMS("SMS_SENT_TEXT_BASED");
 		for(Record r : results)
 			assertEquals("SMS_SENT_TEXT_BASED", r.getValue(Msmsentry.MSMSENTRY.ACTION));
 	}
 
 	@Test
 	public void testUserID1(){
-		Result<Record> results = create.select().from(Msmsentry.MSMSENTRY)
-				.where(Msmsentry.MSMSENTRY.ACTION.eq("111691272636258957769"))
-				.fetch();
-
+		Result<Record> results = testMsmsData.queryMSMS("111691272636258957769");
 		for(Record r : results)
 			assertEquals("111691272636258957769", r.getValue(Msmsentry.MSMSENTRY.USERID));
 	}
 
 	@Test
 	public void testUserID2(){
-		Result<Record> results = create.select().from(Msmsentry.MSMSENTRY)
-				.where(Msmsentry.MSMSENTRY.ACTION.eq("105877430327962648647"))
-				.fetch();
-
+		Result<Record> results = testMsmsData.queryMSMS("105877430327962648647");
 		for(Record r : results)
 			assertEquals("105877430327962648647", r.getValue(Msmsentry.MSMSENTRY.USERID));
 	}

@@ -16,20 +16,20 @@ import org.slf4j.LoggerFactory;
 import edu.fcmd.generated.tables.Msmsentry;
 
 public class MSMSData {
-	
+
 	static Logger logger;
 
 	static Connection connection = null;
 	static Statement statement = null;
-
-	static DSLContext dslContext;
 
 	public MSMSData(Connection connection, Statement statement){
 		MSMSData.connection = connection;
 		MSMSData.statement = statement;
 
 		logger = LoggerFactory.getLogger(MainDatabaseClass.class);
-		dslContext = DSL.using(connection, SQLDialect.MYSQL);
+	}
+	public MSMSData(){
+
 	}
 
 	public int createTable() throws SQLException{
@@ -50,18 +50,18 @@ public class MSMSData {
 				+ extra + "\","
 				+ "from_unixtime("+timestamp +"),\""
 				+ userID +"\");";
-		
+
 		statement.executeUpdate(query);
 
 		//		System.out.println("query: \n" +query);
-		
-		
-//		dslContext.insertInto(Msmsentry.MSMSENTRY, Msmsentry.MSMSENTRY.NAMEID, Msmsentry.MSMSENTRY.ACTION, Msmsentry.MSMSENTRY.EXTRA, Msmsentry.MSMSENTRY.TIME_STAMP, Msmsentry.MSMSENTRY.USERID)
-//		.values(nameid, action, extra, new Timestamp(Long.parseLong(timestamp)), userID)
-//		.onDuplicateKeyIgnore();
-//		logger.info("row added.");
-				
-//		return statement.executeUpdate(query);
+
+
+		//		dslContext.insertInto(Msmsentry.MSMSENTRY, Msmsentry.MSMSENTRY.NAMEID, Msmsentry.MSMSENTRY.ACTION, Msmsentry.MSMSENTRY.EXTRA, Msmsentry.MSMSENTRY.TIME_STAMP, Msmsentry.MSMSENTRY.USERID)
+		//		.values(nameid, action, extra, new Timestamp(Long.parseLong(timestamp)), userID)
+		//		.onDuplicateKeyIgnore();
+		//		logger.info("row added.");
+
+		//		return statement.executeUpdate(query);
 	}
 
 	public ResultSet selectFromTable(String columns, String where, String condition) throws SQLException{
@@ -72,18 +72,25 @@ public class MSMSData {
 		return statement.executeQuery(q);
 	}
 
-	public static Result<Record> queryMSMS(Timestamp startDate, Timestamp endDate){
+	public Result<Record> queryMSMS(Timestamp startDate, Timestamp endDate){
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
 
-		if(endDate == null || startDate == endDate) {
+		if(endDate == null && startDate == null) {
+			return dslContext.select().from(Msmsentry.MSMSENTRY).fetch();
+		}else if(startDate != null && endDate == null){
 			return dslContext.select().from(Msmsentry.MSMSENTRY)
-					.where(Msmsentry.MSMSENTRY.TIME_STAMP.eq(startDate))
+					.where(Msmsentry.MSMSENTRY.TIME_STAMP.greaterOrEqual(startDate))
+					.orderBy(Msmsentry.MSMSENTRY.TIME_STAMP)
+					.fetch();
+		}else if(startDate == null && endDate !=null){
+			return dslContext.select().from(Msmsentry.MSMSENTRY)
+					.where(Msmsentry.MSMSENTRY.TIME_STAMP.lessOrEqual(endDate))
 					.orderBy(Msmsentry.MSMSENTRY.TIME_STAMP)
 					.fetch();
 		}else if(endDate.before(startDate)){
 			logger.error("end date is before start date");
 			return null;
-		}else{
-
+		}else {
 			return dslContext.select().from(Msmsentry.MSMSENTRY)
 					.where(Msmsentry.MSMSENTRY.TIME_STAMP.between(startDate, endDate))
 					.orderBy(Msmsentry.MSMSENTRY.TIME_STAMP)
@@ -91,15 +98,20 @@ public class MSMSData {
 		}
 	}
 
-	public static Result<Record> queryMSMS(String type){
-		if(type.contains("SMS")){
+	public Result<Record> queryMSMS(String type){
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
+		if(type.matches("\\d\\d\\d\\d-\\d\\d-\\d\\d")){
+			return dslContext.select().from(Msmsentry.MSMSENTRY)
+					.where(Msmsentry.MSMSENTRY.TIME_STAMP.like(type+"%"))
+					.fetch();
+		}else if(type.contains("SMS")){
 			return dslContext.select().from(Msmsentry.MSMSENTRY)
 					.where(Msmsentry.MSMSENTRY.ACTION.eq(type))
 					.fetch();
 		}else{
-		return dslContext.select().from(Msmsentry.MSMSENTRY)
-				.where(Msmsentry.MSMSENTRY.USERID.eq(type))
-				.fetch();
+			return dslContext.select().from(Msmsentry.MSMSENTRY)
+					.where(Msmsentry.MSMSENTRY.USERID.eq(type))
+					.fetch();
 
 		}
 	}
