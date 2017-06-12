@@ -119,4 +119,5 @@ public class MainDatabaseClassTest {
 		for(Record r : results)
 			assertEquals("105877430327962648647", r.getValue(Msmsentry.MSMSENTRY.USERID));
 	}
+	
 }

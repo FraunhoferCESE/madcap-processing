@@ -27,13 +27,12 @@ public class MainDatabaseClass {
 		dbHelper.init("madcapman","!QAZ@WSX");
 		dbHelper.connect();
 
-//		databaseMSMS();
+		databaseMSMS();
 		
 	}
 
 	private static void databaseMSMS() {		
 		MSMSData msmsData = new MSMSData(dbHelper.getConnection(), dbHelper.getStatement());
-
 
 		try {
 			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\json\\MSMSEntry-000000000000.json");
@@ -54,7 +53,7 @@ public class MainDatabaseClass {
 						innerJobj.get("name").toString(), 
 						jObject.get("action").toString(), 
 						jObject.get("extra").toString(), 
-						jObject.get("timestamp").toString().substring(0, 10),
+						jObject.get("timestamp").toString(),//.substring(0, 10),
 						jObject.get("userID").toString());
 			}
 

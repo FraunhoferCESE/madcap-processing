@@ -5,15 +5,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+
+import org.jooq.Constraint;
 import org.jooq.DSLContext;
+import org.jooq.InsertFinalStep;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.util.h2.information_schema.tables.Constraints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.fcmd.generated.tables.Msmsentry;
+import edu.fcmd.generated.tables.records.MsmsentryRecord;
 
 public class MSMSData {
 
@@ -28,49 +34,43 @@ public class MSMSData {
 
 		logger = LoggerFactory.getLogger(MainDatabaseClass.class);
 	}
-	public MSMSData(){
+
+	//	public int createTable() throws SQLException{
+	//		int result = -1;
+	//		String query = "CREATE TABLE IF NOT EXISTS madcap.msmsentry ("+
+	//				"nameid VARCHAR(100) NOT NULL,"+
+	//				"action VARCHAR(100) NOT NULL,"+
+	//				"extra VARCHAR(100),"+
+	//				"time_stamp DATETIME,"+
+	//				"userID VARCHAR(25) NOT NULL,"+
+	//				"PRIMARY KEY (nameid));";
+	//		return statement.executeUpdate(query);
+	//	}	
+
+	public void createTable(){
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
+		
+		dslContext.createTable(Msmsentry.MSMSENTRY)
+		.column(Msmsentry.MSMSENTRY.NAMEID, SQLDataType.VARCHAR(40).nullable(false))
+		.column(Msmsentry.MSMSENTRY.ACTION, SQLDataType.VARCHAR(25).nullable(false))
+		.column(Msmsentry.MSMSENTRY.EXTRA, SQLDataType.VARCHAR(50))
+		.column(Msmsentry.MSMSENTRY.TIME_STAMP, SQLDataType.TIMESTAMP)
+		.column(Msmsentry.MSMSENTRY.USERID, SQLDataType.VARCHAR(25))
+		.execute();
 
 	}
-
-	public int createTable() throws SQLException{
-		int result = -1;
-		String query = "CREATE TABLE IF NOT EXISTS madcap.msmsentry ("+
-				"nameid VARCHAR(100) NOT NULL,"+
-				"action VARCHAR(100) NOT NULL,"+
-				"extra VARCHAR(100),"+
-				"time_stamp DATETIME,"+
-				"userID VARCHAR(25) NOT NULL,"+
-				"PRIMARY KEY (nameid));";
-		return statement.executeUpdate(query);
-	}	
 
 	public void insertIntoAll(String nameid, String action, String extra, String timestamp, String userID) throws SQLException{
-		String query = "insert ignore into madcap.msmsentry values (\"" + nameid +"\",\""
-				+ action + "\",\""
-				+ extra + "\","
-				+ "from_unixtime("+timestamp +"),\""
-				+ userID +"\");";
 
-		statement.executeUpdate(query);
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);;
+		dslContext.insertInto(Msmsentry.MSMSENTRY, Msmsentry.MSMSENTRY.NAMEID, Msmsentry.MSMSENTRY.ACTION, Msmsentry.MSMSENTRY.EXTRA, Msmsentry.MSMSENTRY.TIME_STAMP, Msmsentry.MSMSENTRY.USERID)
+		.values(nameid, action, extra, new Timestamp(Long.parseLong(timestamp)), userID)
+		.onDuplicateKeyIgnore()
+		.execute();
 
-		//		System.out.println("query: \n" +query);
-
-
-		//		dslContext.insertInto(Msmsentry.MSMSENTRY, Msmsentry.MSMSENTRY.NAMEID, Msmsentry.MSMSENTRY.ACTION, Msmsentry.MSMSENTRY.EXTRA, Msmsentry.MSMSENTRY.TIME_STAMP, Msmsentry.MSMSENTRY.USERID)
-		//		.values(nameid, action, extra, new Timestamp(Long.parseLong(timestamp)), userID)
-		//		.onDuplicateKeyIgnore();
-		//		logger.info("row added.");
-
-		//		return statement.executeUpdate(query);
+		dslContext.close();
 	}
 
-	public ResultSet selectFromTable(String columns, String where, String condition) throws SQLException{
-		String q= "select "+ columns +" from madcap.msmsentry";
-		if(where!=null) q = q + " where "+condition;
-		q = q+";";
-		System.out.println(q);
-		return statement.executeQuery(q);
-	}
 
 	public Result<Record> queryMSMS(Timestamp startDate, Timestamp endDate){
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
