@@ -8,10 +8,14 @@ import java.sql.Timestamp;
 
 import org.jooq.Constraint;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 import org.jooq.InsertFinalStep;
 import org.jooq.Record;
+import org.jooq.Record3;
+import org.jooq.Record4;
 import org.jooq.Result;
 import org.jooq.SQLDialect;
+import org.jooq.TableField;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.util.h2.information_schema.tables.Constraints;
@@ -49,7 +53,10 @@ public class MSMSData {
 
 	public void createTable(){
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-		
+
+		Constraint constraint = new Constraint() {
+		};
+
 		dslContext.createTable(Msmsentry.MSMSENTRY)
 		.column(Msmsentry.MSMSENTRY.NAMEID, SQLDataType.VARCHAR(40).nullable(false))
 		.column(Msmsentry.MSMSENTRY.ACTION, SQLDataType.VARCHAR(25).nullable(false))
@@ -99,6 +106,7 @@ public class MSMSData {
 	}
 
 	public Result<Record> queryMSMS(String type){
+
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
 		if(type.matches("\\d\\d\\d\\d-\\d\\d-\\d\\d")){
 			return dslContext.select().from(Msmsentry.MSMSENTRY)
@@ -114,5 +122,49 @@ public class MSMSData {
 					.fetch();
 
 		}
+	}
+
+	/*
+	 * Count the number of occurrence of 
+	 * @param countOn  - Field from the database schema
+	 * @param startDate - Timestamp  - year-1900, MM 00-11, @nullable
+	 * @param endDate - Timestamp  - year-1900, MM 00-11, @nullable
+	 * 
+	 * returns Record3<String, String, Integer> type object with MSMSENTRY.USERID, MSMSENTRY.ACTION and count
+	 */
+	public Result<Record3<String, String, Integer>> countQueryMSMS(Field<?> countOn, Timestamp startDate, Timestamp endDate){
+
+
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
+
+		if(startDate!=null && endDate!=null){
+			if(endDate.before(startDate)){
+				logger.error("end date is before start date");
+				return null;
+			}else return dslContext.select(Msmsentry.MSMSENTRY.USERID, Msmsentry.MSMSENTRY.ACTION, DSL.count(countOn))
+					.from(Msmsentry.MSMSENTRY)
+					.where(Msmsentry.MSMSENTRY.TIME_STAMP.between(startDate,endDate))
+					.groupBy(Msmsentry.MSMSENTRY.USERID, Msmsentry.MSMSENTRY.ACTION)
+					.orderBy(Msmsentry.MSMSENTRY.USERID)
+					.fetch();
+		}else if(startDate != null && endDate == null){
+			return dslContext.select(Msmsentry.MSMSENTRY.USERID, Msmsentry.MSMSENTRY.ACTION, DSL.count(countOn))
+					.from(Msmsentry.MSMSENTRY)
+					.where(Msmsentry.MSMSENTRY.TIME_STAMP.greaterOrEqual(startDate))
+					.groupBy(Msmsentry.MSMSENTRY.USERID, Msmsentry.MSMSENTRY.ACTION)
+					.orderBy(Msmsentry.MSMSENTRY.USERID)
+					.fetch();
+		}else if(startDate == null && endDate !=null){
+			return dslContext.select(Msmsentry.MSMSENTRY.USERID, Msmsentry.MSMSENTRY.ACTION, DSL.count(countOn))
+					.from(Msmsentry.MSMSENTRY)
+					.where(Msmsentry.MSMSENTRY.TIME_STAMP.lessOrEqual(endDate))
+					.groupBy(Msmsentry.MSMSENTRY.USERID, Msmsentry.MSMSENTRY.ACTION)
+					.orderBy(Msmsentry.MSMSENTRY.USERID)
+					.fetch();
+		}else return dslContext.select(Msmsentry.MSMSENTRY.USERID, Msmsentry.MSMSENTRY.ACTION, DSL.count(countOn))
+				.from(Msmsentry.MSMSENTRY)
+				.groupBy(Msmsentry.MSMSENTRY.USERID, Msmsentry.MSMSENTRY.ACTION)
+				.orderBy(Msmsentry.MSMSENTRY.USERID)
+				.fetch();
 	}
 }
