@@ -4,6 +4,7 @@
 package edu.fcmd.generated;
 
 
+import edu.fcmd.generated.tables.Foregroundbackgroundentry;
 import edu.fcmd.generated.tables.Msmsentry;
 
 import java.util.ArrayList;
@@ -30,12 +31,17 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Madcap extends SchemaImpl {
 
-    private static final long serialVersionUID = 1379186313;
+    private static final long serialVersionUID = 1358614060;
 
     /**
      * The reference instance of <code>madcap</code>
      */
     public static final Madcap MADCAP = new Madcap();
+
+    /**
+     * The table <code>madcap.foregroundbackgroundentry</code>.
+     */
+    public final Foregroundbackgroundentry FOREGROUNDBACKGROUNDENTRY = edu.fcmd.generated.tables.Foregroundbackgroundentry.FOREGROUNDBACKGROUNDENTRY;
 
     /**
      * The table <code>madcap.msmsentry</code>.
@@ -67,6 +73,7 @@ public class Madcap extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
+            Foregroundbackgroundentry.FOREGROUNDBACKGROUNDENTRY,
             Msmsentry.MSMSENTRY);
     }
 }

@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.FormattableFlags;
+
 import org.apache.log4j.BasicConfigurator;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,14 +28,74 @@ public class MainDatabaseClass {
 		dbHelper = DatabaseHelper.getInstance();
 		dbHelper.init("madcapman","!QAZ@WSX");
 		dbHelper.connect();
-
-		databaseMSMS();
 		
+		dbHelper.createSchemaIfNotExists("madcap");
+		
+		databaseMSMS();
+//		databaseFBActivity();
+		
+	}
+
+	private static void databaseFBActivity() {
+		ForegroundBackgroundData foregroundbackgroundData = new ForegroundBackgroundData(dbHelper.getConnection(), dbHelper.getStatement());
+		
+		//create table
+		foregroundbackgroundData.createTable();
+		
+		//read josn file and insert into database
+		
+		try {
+			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\json\\ForegroundBackgroundEventEntry-000000000000.json");
+			BufferedReader b = new BufferedReader(new FileReader(file));
+			String readline = "";
+			int count = 0;
+
+			JSONParser jParser = new JSONParser();
+			while((readline = b.readLine()) != null){
+				JSONObject jObject = (JSONObject) jParser.parse(readline);
+
+				logger.info("count: {}", ++count);
+
+				JSONObject innerJobj = (JSONObject) jObject.get("__key__");
+				String accuracy = jObject.get("accuracy").toString();
+				String timestamp = jObject.get("timestamp").toString();
+				
+				if(accuracy.equalsIgnoreCase(timestamp)) accuracy = "1";
+				
+				foregroundbackgroundData.insertIntoAll(
+						innerJobj.get("name").toString(),
+						Integer.parseInt(accuracy), 
+						jObject.get("packageName").toString(), 
+						jObject.get("timestamp").toString(),//.substring(0, 10),
+						jObject.get("userID").toString(),
+						jObject.get("eventType").toString());
+			}
+
+		} catch (FileNotFoundException e) {
+			logger.error("File not found");
+			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error("I/O exception");
+			e.printStackTrace();
+		} catch (ParseException e) {
+			logger.error("Could not parse for JSON object");
+			e.printStackTrace();
+		} catch (NullPointerException npe){
+			logger.error("Null pointer exception");
+			npe.printStackTrace();
+		}
+		
+		//index database
+		foregroundbackgroundData.indexForegroundBackground();
 	}
 
 	private static void databaseMSMS() {		
 		MSMSData msmsData = new MSMSData(dbHelper.getConnection(), dbHelper.getStatement());
+		
+		//create table
+		msmsData.createTable();
 
+		// read json and insert into database
 		try {
 			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\json\\MSMSEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
@@ -41,7 +103,6 @@ public class MainDatabaseClass {
 			int count = 0;
 
 			JSONParser jParser = new JSONParser();
-			msmsData.createTable();
 			while((readline = b.readLine()) != null){
 				JSONObject jObject = (JSONObject) jParser.parse(readline);
 
@@ -73,5 +134,8 @@ public class MainDatabaseClass {
 			logger.error("SQL command failed");
 			e.printStackTrace();
 		}
+		
+		//index database
+		msmsData.indexMSMS();
 	}
 }

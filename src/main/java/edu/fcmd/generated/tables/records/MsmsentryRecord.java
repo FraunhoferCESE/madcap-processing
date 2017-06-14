@@ -30,73 +30,73 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MsmsentryRecord extends UpdatableRecordImpl<MsmsentryRecord> implements Record5<String, String, String, Timestamp, String> {
 
-    private static final long serialVersionUID = -885862911;
+    private static final long serialVersionUID = 1721540225;
 
     /**
-     * Setter for <code>madcap.msmsentry.nameid</code>.
+     * Setter for <code>madcap.msmsentry.NAMEID</code>.
      */
     public void setNameid(String value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>madcap.msmsentry.nameid</code>.
+     * Getter for <code>madcap.msmsentry.NAMEID</code>.
      */
     public String getNameid() {
         return (String) get(0);
     }
 
     /**
-     * Setter for <code>madcap.msmsentry.action</code>.
+     * Setter for <code>madcap.msmsentry.ACTION</code>.
      */
     public void setAction(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>madcap.msmsentry.action</code>.
+     * Getter for <code>madcap.msmsentry.ACTION</code>.
      */
     public String getAction() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>madcap.msmsentry.extra</code>.
+     * Setter for <code>madcap.msmsentry.EXTRA</code>.
      */
     public void setExtra(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>madcap.msmsentry.extra</code>.
+     * Getter for <code>madcap.msmsentry.EXTRA</code>.
      */
     public String getExtra() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>madcap.msmsentry.time_stamp</code>.
+     * Setter for <code>madcap.msmsentry.TIME_STAMP</code>.
      */
     public void setTimeStamp(Timestamp value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>madcap.msmsentry.time_stamp</code>.
+     * Getter for <code>madcap.msmsentry.TIME_STAMP</code>.
      */
     public Timestamp getTimeStamp() {
         return (Timestamp) get(3);
     }
 
     /**
-     * Setter for <code>madcap.msmsentry.userID</code>.
+     * Setter for <code>madcap.msmsentry.USERID</code>.
      */
     public void setUserid(String value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>madcap.msmsentry.userID</code>.
+     * Getter for <code>madcap.msmsentry.USERID</code>.
      */
     public String getUserid() {
         return (String) get(4);

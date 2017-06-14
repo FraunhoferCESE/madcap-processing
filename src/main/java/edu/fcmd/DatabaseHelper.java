@@ -5,12 +5,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.log4j.BasicConfigurator;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DatabaseHelper {
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	static final String DB_URL = "jdbc:mysql://localhost:3306?useSSL=false";
+	static final String DB_URL = "jdbc:mysql://localhost:3306/madcap?useSSL=false";
 
 	//  Database credentials
 	static String USER;
@@ -87,5 +90,12 @@ public class DatabaseHelper {
 		}catch(SQLException se){
 			se.printStackTrace();
 		}
+	}
+
+	public void createSchemaIfNotExists(String schemaName) {
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
+		logger.info("Creating schema");
+		int value = dslContext.createSchemaIfNotExists(schemaName).execute();
+		logger.info("Schema created?: " +value );
 	}
 }

@@ -1,7 +1,6 @@
 package edu.fcmd;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -9,21 +8,16 @@ import java.sql.Timestamp;
 import org.jooq.Constraint;
 import org.jooq.DSLContext;
 import org.jooq.Field;
-import org.jooq.InsertFinalStep;
 import org.jooq.Record;
 import org.jooq.Record3;
-import org.jooq.Record4;
 import org.jooq.Result;
 import org.jooq.SQLDialect;
-import org.jooq.TableField;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
-import org.jooq.util.h2.information_schema.tables.Constraints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.fcmd.generated.tables.Msmsentry;
-import edu.fcmd.generated.tables.records.MsmsentryRecord;
 
 public class MSMSData {
 
@@ -39,37 +33,24 @@ public class MSMSData {
 		logger = LoggerFactory.getLogger(MainDatabaseClass.class);
 	}
 
-	//	public int createTable() throws SQLException{
-	//		int result = -1;
-	//		String query = "CREATE TABLE IF NOT EXISTS madcap.msmsentry ("+
-	//				"nameid VARCHAR(100) NOT NULL,"+
-	//				"action VARCHAR(100) NOT NULL,"+
-	//				"extra VARCHAR(100),"+
-	//				"time_stamp DATETIME,"+
-	//				"userID VARCHAR(25) NOT NULL,"+
-	//				"PRIMARY KEY (nameid));";
-	//		return statement.executeUpdate(query);
-	//	}	
-
 	public void createTable(){
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-
-		Constraint constraint = new Constraint() {
-		};
-
-		dslContext.createTable(Msmsentry.MSMSENTRY)
-		.column(Msmsentry.MSMSENTRY.NAMEID, SQLDataType.VARCHAR(40).nullable(false))
-		.column(Msmsentry.MSMSENTRY.ACTION, SQLDataType.VARCHAR(25).nullable(false))
-		.column(Msmsentry.MSMSENTRY.EXTRA, SQLDataType.VARCHAR(50))
-		.column(Msmsentry.MSMSENTRY.TIME_STAMP, SQLDataType.TIMESTAMP)
-		.column(Msmsentry.MSMSENTRY.USERID, SQLDataType.VARCHAR(25))
+		
+		dslContext.createTableIfNotExists("msmsentry")
+		.column("NAMEID", SQLDataType.VARCHAR(40).nullable(false))
+		.column("ACTION", SQLDataType.VARCHAR(25).nullable(false))
+		.column("EXTRA", SQLDataType.VARCHAR(50))
+		.column("TIME_STAMP", SQLDataType.TIMESTAMP)
+		.column("USERID", SQLDataType.VARCHAR(25))
+		.constraint(DSL.constraint("PK_MSMSENTRY").primaryKey(Msmsentry.MSMSENTRY.NAMEID))
 		.execute();
 
+		dslContext.close();
 	}
 
 	public void insertIntoAll(String nameid, String action, String extra, String timestamp, String userID) throws SQLException{
 
-		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);;
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
 		dslContext.insertInto(Msmsentry.MSMSENTRY, Msmsentry.MSMSENTRY.NAMEID, Msmsentry.MSMSENTRY.ACTION, Msmsentry.MSMSENTRY.EXTRA, Msmsentry.MSMSENTRY.TIME_STAMP, Msmsentry.MSMSENTRY.USERID)
 		.values(nameid, action, extra, new Timestamp(Long.parseLong(timestamp)), userID)
 		.onDuplicateKeyIgnore()
@@ -77,7 +58,31 @@ public class MSMSData {
 
 		dslContext.close();
 	}
+	
+	public void indexMSMS(){
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
+		dslContext.createIndex("INDEX_NAMEID").on(Msmsentry.MSMSENTRY, Msmsentry.MSMSENTRY.NAMEID).execute();
+		dslContext.createIndex("INDEX_ACTION").on(Msmsentry.MSMSENTRY, Msmsentry.MSMSENTRY.ACTION).execute();
+		dslContext.createIndex("INDEX_TIMESTAMP").on(Msmsentry.MSMSENTRY, Msmsentry.MSMSENTRY.TIME_STAMP).execute();
+		dslContext.createIndex("INDEX_USERID").on(Msmsentry.MSMSENTRY, Msmsentry.MSMSENTRY.USERID).execute();
+		
+		dslContext.close();
+	}
 
+	public void dropTable(){
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
+		
+		dslContext.dropTable(Msmsentry.MSMSENTRY).execute();
+		dslContext.close();
+	}
+	
+	public void truncateTable(){
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
+		
+		dslContext.truncate("msmsentry").execute();
+		
+		dslContext.close();
+	}
 
 	public Result<Record> queryMSMS(Timestamp startDate, Timestamp endDate){
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);

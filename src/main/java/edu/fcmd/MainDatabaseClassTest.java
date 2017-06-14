@@ -8,7 +8,6 @@ import org.hamcrest.CoreMatchers;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Record3;
-import org.jooq.Record4;
 import org.jooq.Result;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;

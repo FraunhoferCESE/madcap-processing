@@ -4,6 +4,7 @@
 package edu.fcmd.generated;
 
 
+import edu.fcmd.generated.tables.Foregroundbackgroundentry;
 import edu.fcmd.generated.tables.Msmsentry;
 
 import javax.annotation.Generated;
@@ -21,6 +22,11 @@ import javax.annotation.Generated;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>madcap.foregroundbackgroundentry</code>.
+     */
+    public static final Foregroundbackgroundentry FOREGROUNDBACKGROUNDENTRY = edu.fcmd.generated.tables.Foregroundbackgroundentry.FOREGROUNDBACKGROUNDENTRY;
 
     /**
      * The table <code>madcap.msmsentry</code>.

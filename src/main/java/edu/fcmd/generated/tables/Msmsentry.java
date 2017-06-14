@@ -35,7 +35,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Msmsentry extends TableImpl<MsmsentryRecord> {
 
-    private static final long serialVersionUID = 458982727;
+    private static final long serialVersionUID = 1246408513;
 
     /**
      * The reference instance of <code>madcap.msmsentry</code>
@@ -51,29 +51,29 @@ public class Msmsentry extends TableImpl<MsmsentryRecord> {
     }
 
     /**
-     * The column <code>madcap.msmsentry.nameid</code>.
+     * The column <code>madcap.msmsentry.NAMEID</code>.
      */
-    public final TableField<MsmsentryRecord, String> NAMEID = createField("nameid", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+    public final TableField<MsmsentryRecord, String> NAMEID = createField("NAMEID", org.jooq.impl.SQLDataType.VARCHAR.length(40).nullable(false), this, "");
 
     /**
-     * The column <code>madcap.msmsentry.action</code>.
+     * The column <code>madcap.msmsentry.ACTION</code>.
      */
-    public final TableField<MsmsentryRecord, String> ACTION = createField("action", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
+    public final TableField<MsmsentryRecord, String> ACTION = createField("ACTION", org.jooq.impl.SQLDataType.VARCHAR.length(25).nullable(false), this, "");
 
     /**
-     * The column <code>madcap.msmsentry.extra</code>.
+     * The column <code>madcap.msmsentry.EXTRA</code>.
      */
-    public final TableField<MsmsentryRecord, String> EXTRA = createField("extra", org.jooq.impl.SQLDataType.VARCHAR.length(100), this, "");
+    public final TableField<MsmsentryRecord, String> EXTRA = createField("EXTRA", org.jooq.impl.SQLDataType.VARCHAR.length(50), this, "");
 
     /**
-     * The column <code>madcap.msmsentry.time_stamp</code>.
+     * The column <code>madcap.msmsentry.TIME_STAMP</code>.
      */
-    public final TableField<MsmsentryRecord, Timestamp> TIME_STAMP = createField("time_stamp", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
+    public final TableField<MsmsentryRecord, Timestamp> TIME_STAMP = createField("TIME_STAMP", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
-     * The column <code>madcap.msmsentry.userID</code>.
+     * The column <code>madcap.msmsentry.USERID</code>.
      */
-    public final TableField<MsmsentryRecord, String> USERID = createField("userID", org.jooq.impl.SQLDataType.VARCHAR.length(25).nullable(false), this, "");
+    public final TableField<MsmsentryRecord, String> USERID = createField("USERID", org.jooq.impl.SQLDataType.VARCHAR.length(25), this, "");
 
     /**
      * Create a <code>madcap.msmsentry</code> table reference
