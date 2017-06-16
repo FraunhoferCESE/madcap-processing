@@ -4,9 +4,9 @@
 package edu.fcmd.generated;
 
 
-import edu.fcmd.generated.tables.Foregroundbackgroundentry;
+import edu.fcmd.generated.tables.Foregroundappentry;
 import edu.fcmd.generated.tables.Msmsentry;
-import edu.fcmd.generated.tables.records.ForegroundbackgroundentryRecord;
+import edu.fcmd.generated.tables.records.ForegroundappentryRecord;
 import edu.fcmd.generated.tables.records.MsmsentryRecord;
 
 import javax.annotation.Generated;
@@ -38,7 +38,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<ForegroundbackgroundentryRecord> KEY_FOREGROUNDBACKGROUNDENTRY_PRIMARY = UniqueKeys0.KEY_FOREGROUNDBACKGROUNDENTRY_PRIMARY;
+    public static final UniqueKey<ForegroundappentryRecord> KEY_FOREGROUNDAPPENTRY_PRIMARY = UniqueKeys0.KEY_FOREGROUNDAPPENTRY_PRIMARY;
     public static final UniqueKey<MsmsentryRecord> KEY_MSMSENTRY_PRIMARY = UniqueKeys0.KEY_MSMSENTRY_PRIMARY;
 
     // -------------------------------------------------------------------------
@@ -51,7 +51,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class UniqueKeys0 extends AbstractKeys {
-        public static final UniqueKey<ForegroundbackgroundentryRecord> KEY_FOREGROUNDBACKGROUNDENTRY_PRIMARY = createUniqueKey(Foregroundbackgroundentry.FOREGROUNDBACKGROUNDENTRY, "KEY_foregroundbackgroundentry_PRIMARY", Foregroundbackgroundentry.FOREGROUNDBACKGROUNDENTRY.NAMEID);
+        public static final UniqueKey<ForegroundappentryRecord> KEY_FOREGROUNDAPPENTRY_PRIMARY = createUniqueKey(Foregroundappentry.FOREGROUNDAPPENTRY, "KEY_foregroundappentry_PRIMARY", Foregroundappentry.FOREGROUNDAPPENTRY.NAMEID);
         public static final UniqueKey<MsmsentryRecord> KEY_MSMSENTRY_PRIMARY = createUniqueKey(Msmsentry.MSMSENTRY, "KEY_msmsentry_PRIMARY", Msmsentry.MSMSENTRY.NAMEID);
     }
 }

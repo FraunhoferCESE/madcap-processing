@@ -4,16 +4,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DatabaseHelper {
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	static final String DB_URL = "jdbc:mysql://localhost:3306/madcap?useSSL=false";
+	String DB_URL = "jdbc:mysql://localhost:3306/?useSSL=false";
 
 	//  Database credentials
 	static String USER;
@@ -31,16 +29,16 @@ public class DatabaseHelper {
 		return connection;
 	}
 
-	public Statement getStatement(){
-		return statement;
-	}
+//	public Statement getStatement(){
+//		return statement;
+//	}
 
 	private DatabaseHelper() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public static DatabaseHelper getInstance(){
-		logger = LoggerFactory.getLogger(MainDatabaseClass.class);
+		logger = Logger.getLogger(MainDatabaseClass.class);
 		//			BasicConfigurator.configure();
 		return databaseHelper;
 	}
@@ -60,11 +58,14 @@ public class DatabaseHelper {
 			connection = DriverManager.getConnection(DB_URL, USER, PASS);
 			//execute query
 			logger.info("Creating database...");
-			statement = connection.createStatement();
 
-			String query = "create database if not exists MADCAP";
-			int val = statement.executeUpdate(query);
-			logger.info("Database created? {}", val);
+			DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
+			dslContext.createSchemaIfNotExists("madcap").execute();
+						
+			//use created database
+			statement = connection.createStatement();
+			String query = "use MADCAP";
+			statement.executeUpdate(query);
 
 		} catch (ClassNotFoundException e) {
 			logger.error("Database connection failed");
@@ -92,10 +93,10 @@ public class DatabaseHelper {
 		}
 	}
 
-	public void createSchemaIfNotExists(String schemaName) {
-		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-		logger.info("Creating schema");
-		int value = dslContext.createSchemaIfNotExists(schemaName).execute();
-		logger.info("Schema created?: " +value );
-	}
+//	public void createSchemaIfNotExists(String schemaName) {
+//		
+//		logger.info("Creating schema");
+//		int value = dslContext.createSchemaIfNotExists(schemaName).execute();
+//		logger.info("Schema created?: " +value );
+//	}
 }

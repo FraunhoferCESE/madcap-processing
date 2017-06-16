@@ -3,6 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.fcmd</groupId>
 	<artifactId>madcap-database</artifactId>
+	<name>madcap-processing</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 	<dependencies>
@@ -11,12 +12,8 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.41</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.json/json -->
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20160810</version>
-		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.json/json <dependency> <groupId>org.json</groupId> 
+			<artifactId>json</artifactId> <version>20160810</version> </dependency> -->
 		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
@@ -40,12 +37,13 @@
 			<version>3.9.2</version>
 		</dependency>
 		<!-- logger -->
-		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.25</version>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
 		</dependency>
+
 		<!-- junit testing dependency -->
 		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
@@ -53,6 +51,75 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
-
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-codegen-maven</artifactId>
+				<version>3.9.2</version>
+				<!-- The plugin should hook into the generate goal -->
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>5.1.41</version>
+					</dependency>
+				</dependencies>
+				<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.9.2.xsd">
+					<!-- Configure the database connection here -->
+					<jdbc>
+						<driver>com.mysql.jdbc.Driver</driver>
+						<url>jdbc:mysql://localhost:3306/madcap</url>
+						<user>madcapman</user>
+						<password>!QAZ@WSX</password>
+					</jdbc>
+
+					<generator>
+						<!-- The default code generator. You can override this one, to generate 
+							your own code style. Supported generators: - org.jooq.util.JavaGenerator 
+							- org.jooq.util.ScalaGenerator Defaults to org.jooq.util.JavaGenerator -->
+						<name>org.jooq.util.JavaGenerator</name>
+
+						<database>
+							<!-- The database type. The format here is: org.util.[database].[database]Database -->
+							<name>org.jooq.util.mysql.MySQLDatabase</name>
+
+							<!-- The database schema (or in the absence of schema support, in 
+								your RDBMS this can be the owner, user, database name) to be generated -->
+							<inputSchema>madcap</inputSchema>
+
+							<!-- All elements that are generated from your schema (A Java regular 
+								expression. Use the pipe to separate several expressions) Watch out for case-sensitivity. 
+								Depending on your database, this might be important! -->
+							<includes>.*</includes>
+
+							<!-- All elements that are excluded from your schema (A Java regular 
+								expression. Use the pipe to separate several expressions). Excludes match 
+								before includes, i.e. excludes have a higher priority -->
+							<excludes></excludes>
+						</database>
+
+						<target>
+							<!-- The destination package of your generated classes (within the 
+								destination directory) -->
+							<packageName>edu.fcmd.generated</packageName>
+
+							<!-- The destination directory of your generated classes. Using Maven 
+								directory layout here -->
+							<directory>C:\Users\PGuruprasad\workspace\madcap-database\src\main\java
+							</directory>
+						</target>
+					</generator>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

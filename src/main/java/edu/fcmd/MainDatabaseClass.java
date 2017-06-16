@@ -1,18 +1,16 @@
 package edu.fcmd;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.FormattableFlags;
-
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MainDatabaseClass {
 
@@ -22,25 +20,23 @@ public class MainDatabaseClass {
 
 	public static void main(String[] args) {
 
-		logger = LoggerFactory.getLogger(MainDatabaseClass.class);
+		logger = Logger.getLogger(MainDatabaseClass.class);
 		BasicConfigurator.configure();
 
 		dbHelper = DatabaseHelper.getInstance();
 		dbHelper.init("madcapman","!QAZ@WSX");
 		dbHelper.connect();
 		
-		dbHelper.createSchemaIfNotExists("madcap");
-		
+		databaseFBActivity();
 		databaseMSMS();
-//		databaseFBActivity();
 		
 	}
 
 	private static void databaseFBActivity() {
-		ForegroundBackgroundData foregroundbackgroundData = new ForegroundBackgroundData(dbHelper.getConnection(), dbHelper.getStatement());
+		ForegroundAppData foregroundAppData = new ForegroundAppData(dbHelper.getConnection());
 		
 		//create table
-		foregroundbackgroundData.createTable();
+		foregroundAppData.createTable();
 		
 		//read josn file and insert into database
 		
@@ -54,7 +50,7 @@ public class MainDatabaseClass {
 			while((readline = b.readLine()) != null){
 				JSONObject jObject = (JSONObject) jParser.parse(readline);
 
-				logger.info("count: {}", ++count);
+				logger.info("count: "+ ++count);
 
 				JSONObject innerJobj = (JSONObject) jObject.get("__key__");
 				String accuracy = jObject.get("accuracy").toString();
@@ -62,7 +58,7 @@ public class MainDatabaseClass {
 				
 				if(accuracy.equalsIgnoreCase(timestamp)) accuracy = "1";
 				
-				foregroundbackgroundData.insertIntoAll(
+				foregroundAppData.insertIntoAll(
 						innerJobj.get("name").toString(),
 						Integer.parseInt(accuracy), 
 						jObject.get("packageName").toString(), 
@@ -86,11 +82,11 @@ public class MainDatabaseClass {
 		}
 		
 		//index database
-		foregroundbackgroundData.indexForegroundBackground();
+		foregroundAppData.indexForegroundApp();
 	}
 
 	private static void databaseMSMS() {		
-		MSMSData msmsData = new MSMSData(dbHelper.getConnection(), dbHelper.getStatement());
+		MSMSData msmsData = new MSMSData(dbHelper.getConnection());
 		
 		//create table
 		msmsData.createTable();
@@ -106,7 +102,7 @@ public class MainDatabaseClass {
 			while((readline = b.readLine()) != null){
 				JSONObject jObject = (JSONObject) jParser.parse(readline);
 
-				logger.info("count: {}", ++count);
+				logger.info("count: "+ ++count);
 				//				System.out.println("Json: \n"+ jObject);
 
 				JSONObject innerJobj = (JSONObject) jObject.get("__key__");

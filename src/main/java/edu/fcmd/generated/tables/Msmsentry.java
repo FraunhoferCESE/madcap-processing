@@ -35,7 +35,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Msmsentry extends TableImpl<MsmsentryRecord> {
 
-    private static final long serialVersionUID = 1246408513;
+    private static final long serialVersionUID = 1756400229;
 
     /**
      * The reference instance of <code>madcap.msmsentry</code>
@@ -68,12 +68,12 @@ public class Msmsentry extends TableImpl<MsmsentryRecord> {
     /**
      * The column <code>madcap.msmsentry.TIME_STAMP</code>.
      */
-    public final TableField<MsmsentryRecord, Timestamp> TIME_STAMP = createField("TIME_STAMP", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
+    public final TableField<MsmsentryRecord, Timestamp> TIME_STAMP = createField("TIME_STAMP", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>madcap.msmsentry.USERID</code>.
      */
-    public final TableField<MsmsentryRecord, String> USERID = createField("USERID", org.jooq.impl.SQLDataType.VARCHAR.length(25), this, "");
+    public final TableField<MsmsentryRecord, String> USERID = createField("USERID", org.jooq.impl.SQLDataType.VARCHAR.length(25).nullable(false), this, "");
 
     /**
      * Create a <code>madcap.msmsentry</code> table reference
