@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 
 import org.apache.log4j.Logger;
 import org.jooq.DSLContext;
-import org.jooq.Record1;
 import org.jooq.Record2;
 import org.jooq.Record3;
 import org.jooq.Result;
@@ -26,7 +25,7 @@ public class ForegroundAppData {
 	public ForegroundAppData(Connection connection){
 		this.connection = connection;
 
-		logger = Logger.getLogger(MainDatabaseClass.class);
+		logger = Logger.getLogger(ForegroundAppData.class);
 	}
 
 	public void createTable(){
@@ -161,17 +160,12 @@ public class ForegroundAppData {
 				.orderBy(FOREGROUNDAPPENTRY.TIME_STAMP)
 				.fetch();
 	}
-	
+
 	public Result<Record3<String, String, Timestamp>> getAppsByUserOnTime(String userID, String startTime, String endTime){
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
 
-		if(startTime == null && endTime == null){
-			return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE, FOREGROUNDAPPENTRY.TIME_STAMP)
-					.from(FOREGROUNDAPPENTRY)
-					.where(FOREGROUNDAPPENTRY.USERID.eq(userID))
-					.orderBy(FOREGROUNDAPPENTRY.TIME_STAMP)
-					.fetch();
-		}
+
+
 		if(startTime != null && endTime == null){
 			return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE, FOREGROUNDAPPENTRY.TIME_STAMP)
 					.from(FOREGROUNDAPPENTRY)
@@ -191,61 +185,79 @@ public class ForegroundAppData {
 		return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE, FOREGROUNDAPPENTRY.TIME_STAMP)
 				.from(FOREGROUNDAPPENTRY)
 				.where(FOREGROUNDAPPENTRY.USERID.eq(userID))
-				.and(FOREGROUNDAPPENTRY.TIME_STAMP.between(Timestamp.valueOf(startTime), Timestamp.valueOf(endTime)))
 				.orderBy(FOREGROUNDAPPENTRY.TIME_STAMP)
 				.fetch();
+
+
+		//The below code is redundant with getAppsByUserOnTIme(String, Timestamp, Timestamp)
+		//
+		//		return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE, FOREGROUNDAPPENTRY.TIME_STAMP)
+		//				.from(FOREGROUNDAPPENTRY)
+		//				.where(FOREGROUNDAPPENTRY.USERID.eq(userID))
+		//				.and(FOREGROUNDAPPENTRY.TIME_STAMP.between(Timestamp.valueOf(startTime), Timestamp.valueOf(endTime)))
+		//				.orderBy(FOREGROUNDAPPENTRY.TIME_STAMP)
+		//				.fetch();
 	}
-	
-	public Result<Record3<String, String, Timestamp>> getAppsByUser(String userid, String startTime, String endTime){
+
+	public Result<Record2<String, String>> getAppsByUser(String userid, String startTime, String endTime){
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
 
 		if(startTime == null && endTime == null){
-			return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE, FOREGROUNDAPPENTRY.TIME_STAMP)
+			return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE)
 					.from(FOREGROUNDAPPENTRY)
 					.where(FOREGROUNDAPPENTRY.USERID.eq(userid))
 					.orderBy(FOREGROUNDAPPENTRY.TIME_STAMP)
 					.fetch();
 		}
 		if(startTime != null && endTime == null){
-			return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE, FOREGROUNDAPPENTRY.TIME_STAMP)
+			return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE)
 					.from(FOREGROUNDAPPENTRY)
 					.where(FOREGROUNDAPPENTRY.USERID.eq(userid))
-					.and(FOREGROUNDAPPENTRY.TIME_STAMP.like(startTime+"%"))
+					.and(FOREGROUNDAPPENTRY.TIME_STAMP.greaterOrEqual(Timestamp.valueOf(startTime)))
 					.orderBy(FOREGROUNDAPPENTRY.TIME_STAMP)
 					.fetch();
 		}
 		if(startTime == null && endTime !=null){
-			return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE, FOREGROUNDAPPENTRY.TIME_STAMP)
+			return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE)
 					.from(FOREGROUNDAPPENTRY)
 					.where(FOREGROUNDAPPENTRY.USERID.eq(userid))
-					.and(FOREGROUNDAPPENTRY.TIME_STAMP.like(endTime+"%"))
+					.and(FOREGROUNDAPPENTRY.TIME_STAMP.lessOrEqual(Timestamp.valueOf(endTime)))
 					.orderBy(FOREGROUNDAPPENTRY.TIME_STAMP)
 					.fetch();
 		}
-		return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE, FOREGROUNDAPPENTRY.TIME_STAMP)
+		return dslContext.select(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE)
 				.from(FOREGROUNDAPPENTRY)
 				.where(FOREGROUNDAPPENTRY.USERID.eq(userid))
 				.and(FOREGROUNDAPPENTRY.TIME_STAMP.between(Timestamp.valueOf(startTime), Timestamp.valueOf(endTime)))
 				.orderBy(FOREGROUNDAPPENTRY.TIME_STAMP)
 				.fetch();
 	}
-	
-	public Result<Record2<String, String>> getAppsOrderByUser(){
+
+	public Result<Record3<String, String, Integer>> getCountOfAppsUsedByUser(){
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-		
-		return dslContext.selectDistinct(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE)
+
+		return dslContext.selectDistinct(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE, DSL.count(FOREGROUNDAPPENTRY.APPPACKAGE))
 				.from(FOREGROUNDAPPENTRY)
 				.groupBy(FOREGROUNDAPPENTRY.USERID, FOREGROUNDAPPENTRY.APPPACKAGE)
 				.orderBy(FOREGROUNDAPPENTRY.USERID)
 				.fetch();
 	}
-	
+
 	public Result<Record2<String, Integer>> getNumberOfUsersByApp(){
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-		
+
 		return dslContext.select(FOREGROUNDAPPENTRY.APPPACKAGE, DSL.countDistinct(FOREGROUNDAPPENTRY.USERID))
 				.from(FOREGROUNDAPPENTRY)
 				.groupBy(FOREGROUNDAPPENTRY.APPPACKAGE)
+				.fetch();
+	}
+
+	public Result<Record2<String, Integer>> getNumberOfAppsByUserid(){
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
+
+		return dslContext.selectDistinct(FOREGROUNDAPPENTRY.USERID, DSL.count(FOREGROUNDAPPENTRY.APPPACKAGE))
+				.from(FOREGROUNDAPPENTRY)
+				.groupBy(FOREGROUNDAPPENTRY.USERID)
 				.fetch();
 	}
 }

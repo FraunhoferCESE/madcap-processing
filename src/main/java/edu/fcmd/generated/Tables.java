@@ -4,6 +4,7 @@
 package edu.fcmd.generated;
 
 
+import edu.fcmd.generated.tables.Appinfotable;
 import edu.fcmd.generated.tables.Foregroundappentry;
 import edu.fcmd.generated.tables.Msmsentry;
 
@@ -22,6 +23,11 @@ import javax.annotation.Generated;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>madcap.appinfotable</code>.
+     */
+    public static final Appinfotable APPINFOTABLE = edu.fcmd.generated.tables.Appinfotable.APPINFOTABLE;
 
     /**
      * The table <code>madcap.foregroundappentry</code>.

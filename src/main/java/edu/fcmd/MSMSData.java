@@ -26,7 +26,7 @@ public class MSMSData {
 
 	public MSMSData(Connection connection){
 		this.connection = connection;
-		logger = Logger.getLogger(MainDatabaseClass.class);
+		logger = Logger.getLogger(MSMSData.class);
 	}
 
 	public void createTable(){

@@ -28,12 +28,13 @@ public class MainDatabaseClass {
 		dbHelper.connect();
 		
 		databaseFBActivity();
-		databaseMSMS();
+//		databaseMSMS();
 		
 	}
 
 	private static void databaseFBActivity() {
 		ForegroundAppData foregroundAppData = new ForegroundAppData(dbHelper.getConnection());
+		AppInfoDatabase appInfo = new AppInfoDatabase(dbHelper.getConnection());
 		
 		//create table
 		foregroundAppData.createTable();
@@ -65,6 +66,8 @@ public class MainDatabaseClass {
 						jObject.get("timestamp").toString(),//.substring(0, 10),
 						jObject.get("userID").toString(),
 						jObject.get("eventType").toString());
+				
+				appInfo.addAppNameAndCategory(jObject.get("packageName").toString());
 			}
 
 		} catch (FileNotFoundException e) {
@@ -82,7 +85,7 @@ public class MainDatabaseClass {
 		}
 		
 		//index database
-		foregroundAppData.indexForegroundApp();
+//		foregroundAppData.indexForegroundApp();
 	}
 
 	private static void databaseMSMS() {		

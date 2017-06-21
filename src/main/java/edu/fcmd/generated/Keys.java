@@ -4,8 +4,10 @@
 package edu.fcmd.generated;
 
 
+import edu.fcmd.generated.tables.Appinfotable;
 import edu.fcmd.generated.tables.Foregroundappentry;
 import edu.fcmd.generated.tables.Msmsentry;
+import edu.fcmd.generated.tables.records.AppinfotableRecord;
 import edu.fcmd.generated.tables.records.ForegroundappentryRecord;
 import edu.fcmd.generated.tables.records.MsmsentryRecord;
 
@@ -38,6 +40,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<AppinfotableRecord> KEY_APPINFOTABLE_PRIMARY = UniqueKeys0.KEY_APPINFOTABLE_PRIMARY;
     public static final UniqueKey<ForegroundappentryRecord> KEY_FOREGROUNDAPPENTRY_PRIMARY = UniqueKeys0.KEY_FOREGROUNDAPPENTRY_PRIMARY;
     public static final UniqueKey<MsmsentryRecord> KEY_MSMSENTRY_PRIMARY = UniqueKeys0.KEY_MSMSENTRY_PRIMARY;
 
@@ -51,6 +54,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class UniqueKeys0 extends AbstractKeys {
+        public static final UniqueKey<AppinfotableRecord> KEY_APPINFOTABLE_PRIMARY = createUniqueKey(Appinfotable.APPINFOTABLE, "KEY_appinfotable_PRIMARY", Appinfotable.APPINFOTABLE.PACKAGE_NAME);
         public static final UniqueKey<ForegroundappentryRecord> KEY_FOREGROUNDAPPENTRY_PRIMARY = createUniqueKey(Foregroundappentry.FOREGROUNDAPPENTRY, "KEY_foregroundappentry_PRIMARY", Foregroundappentry.FOREGROUNDAPPENTRY.NAMEID);
         public static final UniqueKey<MsmsentryRecord> KEY_MSMSENTRY_PRIMARY = createUniqueKey(Msmsentry.MSMSENTRY, "KEY_msmsentry_PRIMARY", Msmsentry.MSMSENTRY.NAMEID);
     }
