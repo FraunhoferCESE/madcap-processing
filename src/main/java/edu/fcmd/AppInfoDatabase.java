@@ -12,6 +12,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import edu.fcmd.generated.tables.Appinfotable;
+
 import static edu.fcmd.generated.tables.Appinfotable.APPINFOTABLE;
 
 public class AppInfoDatabase {
@@ -48,13 +50,7 @@ public class AppInfoDatabase {
 			 appName = doc.select("h1.document-title > div.id-app-title");
 			 appCategory = doc.select("[itemprop = genre]");
 			 appDeveloper = doc.select("[itemprop = author]").select("[itemprop = name]");
-			
-//			appName.first();
-			
-//			logger.debug(appName.text());
-//			logger.debug(appCategory.text());
-//			logger.debug(appDeveloper.text());
-			 
+					 
 			 InsertInfoIfNot(packageName, appName.text(), appCategory.text(), appDeveloper.text());
 			
 		} catch (IOException e) {
@@ -76,6 +72,16 @@ public class AppInfoDatabase {
 		logger.debug("App info updated");
 	}
 
+	int getAppNameAndCategory(String packageName){
+		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
+		
+		return dslContext.select()
+		.from(APPINFOTABLE)
+		.where(APPINFOTABLE.PACKAGE_NAME.equals(packageName))
+		.execute();
+	}
+	
+	
 	private void createTableIfNot() {
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
 

@@ -27,14 +27,45 @@ public class MainDatabaseClass {
 		dbHelper.init("madcapman","!QAZ@WSX");
 		dbHelper.connect();
 		
-		databaseFBActivity();
+//		databaseFBActivity();
 //		databaseMSMS();
+		databaseAppInfo();
+	}
+
+	private static void databaseAppInfo() {
+		AppInfoDatabase appInfo = new AppInfoDatabase(dbHelper.getConnection());
+		try {
+			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\json\\ForegroundBackgroundEventEntry-000000000000.json");
+			BufferedReader b = new BufferedReader(new FileReader(file));
+			String readline = "";
+			int count = 0;
+
+			JSONParser jParser = new JSONParser();
+			while((readline = b.readLine()) != null){
+				JSONObject jObject = (JSONObject) jParser.parse(readline);
+				if(appInfo.getAppNameAndCategory(jObject.get("packageName").toString())==0)	logger.debug("SKIP");	
+				else appInfo.addAppNameAndCategory(jObject.get("packageName").toString());
+			}
+
+		} catch (FileNotFoundException e) {
+			logger.error("File not found");
+			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error("I/O exception");
+			e.printStackTrace();
+		} catch (ParseException e) {
+			logger.error("Could not parse for JSON object");
+			e.printStackTrace();
+		} catch (NullPointerException npe){
+			logger.error("Null pointer exception");
+			npe.printStackTrace();
+		}
 		
 	}
 
 	private static void databaseFBActivity() {
 		ForegroundAppData foregroundAppData = new ForegroundAppData(dbHelper.getConnection());
-		AppInfoDatabase appInfo = new AppInfoDatabase(dbHelper.getConnection());
+		
 		
 		//create table
 		foregroundAppData.createTable();
@@ -66,8 +97,6 @@ public class MainDatabaseClass {
 						jObject.get("timestamp").toString(),//.substring(0, 10),
 						jObject.get("userID").toString(),
 						jObject.get("eventType").toString());
-				
-				appInfo.addAppNameAndCategory(jObject.get("packageName").toString());
 			}
 
 		} catch (FileNotFoundException e) {
@@ -85,7 +114,7 @@ public class MainDatabaseClass {
 		}
 		
 		//index database
-//		foregroundAppData.indexForegroundApp();
+		foregroundAppData.indexForegroundApp();
 	}
 
 	private static void databaseMSMS() {		
