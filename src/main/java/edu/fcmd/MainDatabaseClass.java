@@ -26,19 +26,69 @@ public class MainDatabaseClass {
 		dbHelper = DatabaseHelper.getInstance();
 		dbHelper.init("madcapman","!QAZ@WSX");
 		dbHelper.connect();
-		
-//		databaseFBActivity();
-//		databaseMSMS();
-		databaseAppInfo();
+
+		//		databaseFBActivity();
+		//		databaseMSMS();
+		//		databaseAppInfo();
+		databasePhysicalActivity();
+	}
+
+	private static void databasePhysicalActivity() {
+		PhysicalActivityData activityData = new PhysicalActivityData(dbHelper.getConnection());
+
+		//create table
+		activityData.createTable();
+
+		//		insert data into the table
+		try {
+			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\json\\ActivityEntry-000000000000.json");
+			BufferedReader b = new BufferedReader(new FileReader(file));
+			String readline = "";
+			int count = 0;
+
+			JSONParser jParser = new JSONParser();
+			while((readline = b.readLine()) != null){
+				JSONObject jObject = (JSONObject) jParser.parse(readline);
+
+				logger.info("count: "+ ++count);
+				//				System.out.println("Json: \n"+ jObject);
+
+				JSONObject innerJobj = (JSONObject) jObject.get("__key__");
+				activityData.insertIntoAll(
+						innerJobj.get("name").toString(),
+						Double.parseDouble(jObject.get("walking").toString()), 
+						Double.parseDouble(jObject.get("still").toString()), 
+						Double.parseDouble(jObject.get("tilting").toString()), 
+						Double.parseDouble(jObject.get("inVehicle").toString()), 
+						Double.parseDouble(jObject.get("running").toString()), 
+						Double.parseDouble(jObject.get("unknown").toString()), 
+						Double.parseDouble(jObject.get("onFoot").toString()), 
+						Double.parseDouble(jObject.get("onBicycle").toString()),  
+						jObject.get("timestamp").toString(),//.substring(0, 10),
+						jObject.get("userID").toString());
+			}
+
+		} catch (FileNotFoundException e) {
+			logger.error("File not found");
+			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error("I/O exception");
+			e.printStackTrace();
+		} catch (ParseException e) {
+			logger.error("Could not parse for JSON object");
+			e.printStackTrace();
+		} catch (NullPointerException npe){
+			logger.error("Null pointer exception");
+			npe.printStackTrace();
+		}
 	}
 
 	private static void databaseAppInfo() {
-		AppInfoDatabase appInfo = new AppInfoDatabase(dbHelper.getConnection());
+		AppInfoData appInfo = new AppInfoData(dbHelper.getConnection());
 		try {
 			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\json\\ForegroundBackgroundEventEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
-			int count = 0;
 
 			JSONParser jParser = new JSONParser();
 			while((readline = b.readLine()) != null){
@@ -60,18 +110,18 @@ public class MainDatabaseClass {
 			logger.error("Null pointer exception");
 			npe.printStackTrace();
 		}
-		
+
 	}
 
 	private static void databaseFBActivity() {
 		ForegroundAppData foregroundAppData = new ForegroundAppData(dbHelper.getConnection());
-		
-		
+
+
 		//create table
 		foregroundAppData.createTable();
-		
+
 		//read josn file and insert into database
-		
+
 		try {
 			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\json\\ForegroundBackgroundEventEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
@@ -87,9 +137,9 @@ public class MainDatabaseClass {
 				JSONObject innerJobj = (JSONObject) jObject.get("__key__");
 				String accuracy = jObject.get("accuracy").toString();
 				String timestamp = jObject.get("timestamp").toString();
-				
+
 				if(accuracy.equalsIgnoreCase(timestamp)) accuracy = "1";
-				
+
 				foregroundAppData.insertIntoAll(
 						innerJobj.get("name").toString(),
 						Integer.parseInt(accuracy), 
@@ -112,14 +162,14 @@ public class MainDatabaseClass {
 			logger.error("Null pointer exception");
 			npe.printStackTrace();
 		}
-		
+
 		//index database
 		foregroundAppData.indexForegroundApp();
 	}
 
 	private static void databaseMSMS() {		
 		MSMSData msmsData = new MSMSData(dbHelper.getConnection());
-		
+
 		//create table
 		msmsData.createTable();
 
@@ -162,7 +212,7 @@ public class MainDatabaseClass {
 			logger.error("SQL command failed");
 			e.printStackTrace();
 		}
-		
+
 		//index database
 		msmsData.indexMSMS();
 	}

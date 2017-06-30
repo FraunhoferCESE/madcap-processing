@@ -7,6 +7,7 @@ package edu.fcmd.generated;
 import edu.fcmd.generated.tables.Appinfotable;
 import edu.fcmd.generated.tables.Foregroundappentry;
 import edu.fcmd.generated.tables.Msmsentry;
+import edu.fcmd.generated.tables.Physicalactivityentry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +33,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Madcap extends SchemaImpl {
 
-    private static final long serialVersionUID = 949714513;
+    private static final long serialVersionUID = -1998752348;
 
     /**
      * The reference instance of <code>madcap</code>
@@ -53,6 +54,11 @@ public class Madcap extends SchemaImpl {
      * The table <code>madcap.msmsentry</code>.
      */
     public final Msmsentry MSMSENTRY = edu.fcmd.generated.tables.Msmsentry.MSMSENTRY;
+
+    /**
+     * The table <code>madcap.physicalactivityentry</code>.
+     */
+    public final Physicalactivityentry PHYSICALACTIVITYENTRY = edu.fcmd.generated.tables.Physicalactivityentry.PHYSICALACTIVITYENTRY;
 
     /**
      * No further instances allowed
@@ -81,6 +87,7 @@ public class Madcap extends SchemaImpl {
         return Arrays.<Table<?>>asList(
             Appinfotable.APPINFOTABLE,
             Foregroundappentry.FOREGROUNDAPPENTRY,
-            Msmsentry.MSMSENTRY);
+            Msmsentry.MSMSENTRY,
+            Physicalactivityentry.PHYSICALACTIVITYENTRY);
     }
 }

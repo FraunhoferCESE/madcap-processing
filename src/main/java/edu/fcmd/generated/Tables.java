@@ -7,6 +7,7 @@ package edu.fcmd.generated;
 import edu.fcmd.generated.tables.Appinfotable;
 import edu.fcmd.generated.tables.Foregroundappentry;
 import edu.fcmd.generated.tables.Msmsentry;
+import edu.fcmd.generated.tables.Physicalactivityentry;
 
 import javax.annotation.Generated;
 
@@ -38,4 +39,9 @@ public class Tables {
      * The table <code>madcap.msmsentry</code>.
      */
     public static final Msmsentry MSMSENTRY = edu.fcmd.generated.tables.Msmsentry.MSMSENTRY;
+
+    /**
+     * The table <code>madcap.physicalactivityentry</code>.
+     */
+    public static final Physicalactivityentry PHYSICALACTIVITYENTRY = edu.fcmd.generated.tables.Physicalactivityentry.PHYSICALACTIVITYENTRY;
 }

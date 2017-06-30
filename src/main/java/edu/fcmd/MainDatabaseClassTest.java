@@ -6,7 +6,9 @@ import java.sql.Timestamp;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.hamcrest.CoreMatchers;
+import org.jooq.CaseWhenStep;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 import org.jooq.Record;
 import org.jooq.Record2;
 import org.jooq.Record3;
@@ -184,28 +186,36 @@ public class MainDatabaseClassTest {
 	//		Result<Record2<String, Integer>> result = testfbData.getNumberOfAppsByUserid();
 	//		System.out.println(result.toString());
 	//	}
-
+//
+//	@Test
+//	public void getAppNameAndCategoryByTimeTwoDates(){
+//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 01, 01, 0, 0, 0, 0),new Timestamp(0165, 01, 28, 0, 0, 0, 0));
+//		System.out.println(result.toString());
+//	}
+//
+//	@Test
+//	public void getAppNameAndCategoryByTimeStartDates(){
+//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 02, 28, 0, 0, 0, 0), null);
+//		System.out.println(result.toString());
+//	}
+//
+//	@Test
+//	public void getAppNameAndCategoryByTimeEndDates(){
+//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, new Timestamp(0165, 01, 28, 0, 0, 0, 0));
+//		System.out.println(result.toString());
+//	}
+//
+//	@Test
+//	public void getAppNameAndCategoryByTimeNoDates(){
+//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, null);
+//		System.out.println(result.toString());
+//	}
+	
 	@Test
-	public void getAppNameAndCategoryByTimeTwoDates(){
-		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 01, 01, 0, 0, 0, 0),new Timestamp(0165, 01, 28, 0, 0, 0, 0));
-		System.out.println(result.toString());
-	}
-
-	@Test
-	public void getAppNameAndCategoryByTimeStartDates(){
-		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 02, 28, 0, 0, 0, 0), null);
-		System.out.println(result.toString());
-	}
-
-	@Test
-	public void getAppNameAndCategoryByTimeEndDates(){
-		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, new Timestamp(0165, 01, 28, 0, 0, 0, 0));
-		System.out.println(result.toString());
-	}
-
-	@Test
-	public void getAppNameAndCategoryByTimeNoDates(){
-		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, null);
-		System.out.println(result.toString());
+	public void getProbablePhysicalActivity(){
+		PhysicalActivityData activityData = new PhysicalActivityData(dbHelper.getConnection());
+		
+		int result = activityData.getPhysicalActivity();
+		System.out.println(result);
 	}
 }

@@ -7,9 +7,11 @@ package edu.fcmd.generated;
 import edu.fcmd.generated.tables.Appinfotable;
 import edu.fcmd.generated.tables.Foregroundappentry;
 import edu.fcmd.generated.tables.Msmsentry;
+import edu.fcmd.generated.tables.Physicalactivityentry;
 import edu.fcmd.generated.tables.records.AppinfotableRecord;
 import edu.fcmd.generated.tables.records.ForegroundappentryRecord;
 import edu.fcmd.generated.tables.records.MsmsentryRecord;
+import edu.fcmd.generated.tables.records.PhysicalactivityentryRecord;
 
 import javax.annotation.Generated;
 
@@ -43,6 +45,7 @@ public class Keys {
     public static final UniqueKey<AppinfotableRecord> KEY_APPINFOTABLE_PRIMARY = UniqueKeys0.KEY_APPINFOTABLE_PRIMARY;
     public static final UniqueKey<ForegroundappentryRecord> KEY_FOREGROUNDAPPENTRY_PRIMARY = UniqueKeys0.KEY_FOREGROUNDAPPENTRY_PRIMARY;
     public static final UniqueKey<MsmsentryRecord> KEY_MSMSENTRY_PRIMARY = UniqueKeys0.KEY_MSMSENTRY_PRIMARY;
+    public static final UniqueKey<PhysicalactivityentryRecord> KEY_PHYSICALACTIVITYENTRY_PRIMARY = UniqueKeys0.KEY_PHYSICALACTIVITYENTRY_PRIMARY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -57,5 +60,6 @@ public class Keys {
         public static final UniqueKey<AppinfotableRecord> KEY_APPINFOTABLE_PRIMARY = createUniqueKey(Appinfotable.APPINFOTABLE, "KEY_appinfotable_PRIMARY", Appinfotable.APPINFOTABLE.PACKAGE_NAME);
         public static final UniqueKey<ForegroundappentryRecord> KEY_FOREGROUNDAPPENTRY_PRIMARY = createUniqueKey(Foregroundappentry.FOREGROUNDAPPENTRY, "KEY_foregroundappentry_PRIMARY", Foregroundappentry.FOREGROUNDAPPENTRY.NAMEID);
         public static final UniqueKey<MsmsentryRecord> KEY_MSMSENTRY_PRIMARY = createUniqueKey(Msmsentry.MSMSENTRY, "KEY_msmsentry_PRIMARY", Msmsentry.MSMSENTRY.NAMEID);
+        public static final UniqueKey<PhysicalactivityentryRecord> KEY_PHYSICALACTIVITYENTRY_PRIMARY = createUniqueKey(Physicalactivityentry.PHYSICALACTIVITYENTRY, "KEY_physicalactivityentry_PRIMARY", Physicalactivityentry.PHYSICALACTIVITYENTRY.NAMEID);
     }
 }
