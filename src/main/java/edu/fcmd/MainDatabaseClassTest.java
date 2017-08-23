@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.fcmd.generated.tables.Msmsentry;
+//import edu.fcmd.generated.tables.Msmsentry;
 
 
 
@@ -186,30 +186,30 @@ public class MainDatabaseClassTest {
 	//		Result<Record2<String, Integer>> result = testfbData.getNumberOfAppsByUserid();
 	//		System.out.println(result.toString());
 	//	}
-//
-//	@Test
-//	public void getAppNameAndCategoryByTimeTwoDates(){
-//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 01, 01, 0, 0, 0, 0),new Timestamp(0165, 01, 28, 0, 0, 0, 0));
-//		System.out.println(result.toString());
-//	}
-//
-//	@Test
-//	public void getAppNameAndCategoryByTimeStartDates(){
-//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 02, 28, 0, 0, 0, 0), null);
-//		System.out.println(result.toString());
-//	}
-//
-//	@Test
-//	public void getAppNameAndCategoryByTimeEndDates(){
-//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, new Timestamp(0165, 01, 28, 0, 0, 0, 0));
-//		System.out.println(result.toString());
-//	}
-//
-//	@Test
-//	public void getAppNameAndCategoryByTimeNoDates(){
-//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, null);
-//		System.out.println(result.toString());
-//	}
+
+	@Test
+	public void getAppNameAndCategoryByTimeTwoDates(){
+		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 01, 01, 0, 0, 0, 0),new Timestamp(0165, 01, 28, 0, 0, 0, 0));
+		System.out.println(result.toString());
+	}
+
+	@Test
+	public void getAppNameAndCategoryByTimeStartDates(){
+		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 02, 28, 0, 0, 0, 0), null);
+		System.out.println(result.toString());
+	}
+
+	@Test
+	public void getAppNameAndCategoryByTimeEndDates(){
+		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, new Timestamp(0165, 01, 28, 0, 0, 0, 0));
+		System.out.println(result.toString());
+	}
+
+	@Test
+	public void getAppNameAndCategoryByTimeNoDates(){
+		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, null);
+		System.out.println(result.toString());
+	}
 	
 	@Test
 	public void getProbablePhysicalActivity(){
@@ -218,4 +218,14 @@ public class MainDatabaseClassTest {
 		int result = activityData.getPhysicalActivity();
 		System.out.println(result);
 	}
+//	
+//	@Test
+//	public void testGetAppNameAndCategory(){
+//		AppInfoData appData = new AppInfoData(dbHelper.getConnection());
+//		int result = appData.getAppNameAndCategory("com.spotify.music");
+//		System.out.println("com.spotify.music="+result);
+//		
+//		result = appData.getAppNameAndCategory("com.google.android.apps.photos.scanner");
+//		System.out.println("com.UMD.OperationGenovesee="+result);
+//	}
 }

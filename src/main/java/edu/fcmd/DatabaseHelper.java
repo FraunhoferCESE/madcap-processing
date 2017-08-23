@@ -60,11 +60,11 @@ public class DatabaseHelper {
 			logger.info("Creating database...");
 
 			DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-			dslContext.createSchemaIfNotExists("madcap").execute();
+			dslContext.createSchemaIfNotExists("madcap_p").execute();
 						
 			//use created database
 			statement = connection.createStatement();
-			String query = "use MADCAP";
+			String query = "use madcap_p";
 			statement.executeUpdate(query);
 
 		} catch (ClassNotFoundException e) {
@@ -92,11 +92,4 @@ public class DatabaseHelper {
 			se.printStackTrace();
 		}
 	}
-
-//	public void createSchemaIfNotExists(String schemaName) {
-//		
-//		logger.info("Creating schema");
-//		int value = dslContext.createSchemaIfNotExists(schemaName).execute();
-//		logger.info("Schema created?: " +value );
-//	}
 }

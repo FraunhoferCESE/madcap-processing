@@ -3,7 +3,7 @@
   <!-- Configure the database connection here -->
   <jdbc>
     <driver>com.mysql.jdbc.Driver</driver>
-    <url>jdbc:mysql://localhost:3306/madcap</url>
+    <url>jdbc:mysql://localhost:3306/madcap_p</url>
     <user>madcapman</user>
     <password>!QAZ@WSX</password>
   </jdbc>
@@ -23,7 +23,7 @@
 
       <!-- The database schema (or in the absence of schema support, in your RDBMS this
            can be the owner, user, database name) to be generated -->
-      <inputSchema>madcap</inputSchema>
+      <inputSchema>madcap_p</inputSchema>
 
       <!-- All elements that are generated from your schema
            (A Java regular expression. Use the pipe to separate several expressions)

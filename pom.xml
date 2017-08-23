@@ -12,8 +12,6 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.41</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.json/json <dependency> <groupId>org.json</groupId> 
-			<artifactId>json</artifactId> <version>20160810</version> </dependency> -->
 		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
@@ -84,7 +82,7 @@
 					<!-- Configure the database connection here -->
 					<jdbc>
 						<driver>com.mysql.jdbc.Driver</driver>
-						<url>jdbc:mysql://localhost:3306/madcap</url>
+						<url>jdbc:mysql://localhost:3306/madcap_p</url>
 						<user>madcapman</user>
 						<password>!QAZ@WSX</password>
 					</jdbc>
@@ -101,7 +99,7 @@
 
 							<!-- The database schema (or in the absence of schema support, in 
 								your RDBMS this can be the owner, user, database name) to be generated -->
-							<inputSchema>madcap</inputSchema>
+							<inputSchema>madcap_p</inputSchema>
 
 							<!-- All elements that are generated from your schema (A Java regular 
 								expression. Use the pipe to separate several expressions) Watch out for case-sensitivity. 
@@ -117,7 +115,7 @@
 						<target>
 							<!-- The destination package of your generated classes (within the 
 								destination directory) -->
-							<packageName>edu.fcmd.generated</packageName>
+							<packageName>edu.fcmd.generated.rel</packageName>
 
 							<!-- The destination directory of your generated classes. Using Maven 
 								directory layout here -->

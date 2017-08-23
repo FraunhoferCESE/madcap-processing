@@ -27,7 +27,7 @@ import org.jooq.impl.CatalogImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultCatalog extends CatalogImpl {
 
-    private static final long serialVersionUID = 1322520396;
+    private static final long serialVersionUID = 575339854;
 
     /**
      * The reference instance of <code></code>
@@ -35,9 +35,9 @@ public class DefaultCatalog extends CatalogImpl {
     public static final DefaultCatalog DEFAULT_CATALOG = new DefaultCatalog();
 
     /**
-     * The schema <code>madcap</code>.
+     * The schema <code>madcap_p</code>.
      */
-    public final Madcap MADCAP = edu.fcmd.generated.Madcap.MADCAP;
+    public final MadcapP MADCAP_P = edu.fcmd.generated.MadcapP.MADCAP_P;
 
     /**
      * No further instances allowed
@@ -55,6 +55,6 @@ public class DefaultCatalog extends CatalogImpl {
 
     private final List<Schema> getSchemas0() {
         return Arrays.<Schema>asList(
-            Madcap.MADCAP);
+            MadcapP.MADCAP_P);
     }
 }

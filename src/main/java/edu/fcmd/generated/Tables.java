@@ -4,16 +4,14 @@
 package edu.fcmd.generated;
 
 
-import edu.fcmd.generated.tables.Appinfotable;
 import edu.fcmd.generated.tables.Foregroundappentry;
-import edu.fcmd.generated.tables.Msmsentry;
-import edu.fcmd.generated.tables.Physicalactivityentry;
+import edu.fcmd.generated.tables.Locationentry;
 
 import javax.annotation.Generated;
 
 
 /**
- * Convenience access to all tables in madcap
+ * Convenience access to all tables in madcap_p
  */
 @Generated(
     value = {
@@ -26,22 +24,12 @@ import javax.annotation.Generated;
 public class Tables {
 
     /**
-     * The table <code>madcap.appinfotable</code>.
-     */
-    public static final Appinfotable APPINFOTABLE = edu.fcmd.generated.tables.Appinfotable.APPINFOTABLE;
-
-    /**
-     * The table <code>madcap.foregroundappentry</code>.
+     * The table <code>madcap_p.foregroundappentry</code>.
      */
     public static final Foregroundappentry FOREGROUNDAPPENTRY = edu.fcmd.generated.tables.Foregroundappentry.FOREGROUNDAPPENTRY;
 
     /**
-     * The table <code>madcap.msmsentry</code>.
+     * The table <code>madcap_p.locationentry</code>.
      */
-    public static final Msmsentry MSMSENTRY = edu.fcmd.generated.tables.Msmsentry.MSMSENTRY;
-
-    /**
-     * The table <code>madcap.physicalactivityentry</code>.
-     */
-    public static final Physicalactivityentry PHYSICALACTIVITYENTRY = edu.fcmd.generated.tables.Physicalactivityentry.PHYSICALACTIVITYENTRY;
+    public static final Locationentry LOCATIONENTRY = edu.fcmd.generated.tables.Locationentry.LOCATIONENTRY;
 }

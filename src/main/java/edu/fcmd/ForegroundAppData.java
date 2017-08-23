@@ -14,26 +14,27 @@ import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 
-import edu.fcmd.generated.tables.Appinfotable;
+import edu.fcmd.generated.rel.tables.Appinfotable;
 
-import static edu.fcmd.generated.tables.Foregroundappentry.FOREGROUNDAPPENTRY;
+import static edu.fcmd.generated.rel.tables.Foregroundappentry.FOREGROUNDAPPENTRY;
+
+//import static edu.fcmd.generated.tables.Foregroundappentry.FOREGROUNDAPPENTRY;
 
 
 public class ForegroundAppData {
-
-	static Logger logger;
-
-	Connection connection = null;
-
+	
+	protected static Logger logger;
+	protected Connection connection = null;
+	
 	public ForegroundAppData(Connection connection){
 		this.connection = connection;
 
 		logger = Logger.getLogger(ForegroundAppData.class);
 	}
 
-	public void createTable(){
+	public void createTable() {
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-
+	
 		dslContext.createTableIfNotExists("foregroundappentry")
 		.column("NAMEID", SQLDataType.VARCHAR(40).nullable(false))
 		.column("ACCURACY", SQLDataType.INTEGER.nullable(false))
@@ -43,18 +44,18 @@ public class ForegroundAppData {
 		.column("EVENTTYPE", SQLDataType.VARCHAR(2).nullable(false))
 		.constraint(DSL.constraint("PK_FOREGROUNDAPPENTRY").primaryKey("NAMEID"))
 		.execute();
-
+	
 		dslContext.close();
 	}
 
-	public void indexForegroundApp(){
+	public void indexForegroundApp() {
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-
+	
 		/*
 		 * MySQL does not support createIndexIfNotExists(). 
 		 * This method creates an index on the required column. If the index already exists, the exception is caught and understood that the index already exists. 
 		 */
-
+	
 		//		try{
 		//			logger.debug("Indexing NAMEID");
 		//			dslContext.createIndex("INDEX_NAMEID").on(Foregroundbackgroundentry.FOREGROUNDBACKGROUNDENTRY, Foregroundbackgroundentry.FOREGROUNDBACKGROUNDENTRY.NAMEID).execute();
@@ -63,8 +64,8 @@ public class ForegroundAppData {
 		//			logger.error("ERROR: "+sqlException.getMessage());
 		//			logger.debug("NAMEID already indexed");
 		//		} //NAMEID is already indexed as PRIMARY KEY.
-
-
+	
+	
 		try{
 			logger.debug("Indexing ACCURACY");
 			dslContext.createIndex("INDEX_ACCURACY").on(FOREGROUNDAPPENTRY, FOREGROUNDAPPENTRY.ACCURACY).execute();
@@ -100,10 +101,10 @@ public class ForegroundAppData {
 		dslContext.close();
 	}
 
-	public void insertIntoAll(String nameid, Integer accuracy, String appPackage, String timestamp, String userID, String eventType){
-
+	public void insertIntoTable(String nameid, Integer accuracy, String appPackage, String timestamp, String userID, String eventType) {
+	
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-
+	
 		dslContext.insertInto(FOREGROUNDAPPENTRY,FOREGROUNDAPPENTRY.NAMEID,
 				FOREGROUNDAPPENTRY.ACCURACY, FOREGROUNDAPPENTRY.APPPACKAGE,
 				FOREGROUNDAPPENTRY.TIME_STAMP, FOREGROUNDAPPENTRY.USERID,
@@ -111,26 +112,26 @@ public class ForegroundAppData {
 		.values(nameid, accuracy, appPackage, new Timestamp(Long.parseLong(timestamp)), userID, eventType)
 		.onDuplicateKeyIgnore()
 		.execute();
-
+	
 		dslContext.close();
 	}
 
-	public void dropTable(){
+	public void dropTable() {
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-
+	
 		dslContext.dropTable("foregroundappentry").execute();
 		dslContext.close();
 	}
 
-	public void truncateTable(){
+	public void truncateTable() {
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-
+	
 		dslContext.truncate("foregroundappentry").execute();
-
+	
 		dslContext.close();
 	}
 
-		public Result<Record3<String, String, Timestamp>> getAppsByUserOnTime(String userID, Timestamp startTime, Timestamp endTime){
+	public Result<Record3<String, String, Timestamp>> getAppsByUserOnTime(String userID, Timestamp startTime, Timestamp endTime){
 			DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
 	
 			if(startTime == null && endTime == null){

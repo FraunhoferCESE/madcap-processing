@@ -15,7 +15,8 @@ import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 
-import static edu.fcmd.generated.tables.Msmsentry.MSMSENTRY;
+//import static edu.fcmd.generated.tables.Msmsentry.MSMSENTRY;
+import static edu.fcmd.generated.rel.tables.Msmsentry.MSMSENTRY;
 
 
 public class MSMSData {
@@ -44,7 +45,7 @@ public class MSMSData {
 		dslContext.close();
 	}
 
-	public void insertIntoAll(String nameid, String action, String extra, String timestamp, String userID) throws SQLException{
+	public void insertIntoTable(String nameid, String action, String extra, String timestamp, String userID) throws SQLException{
 
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
 		dslContext.insertInto(MSMSENTRY, MSMSENTRY.NAMEID, MSMSENTRY.ACTION, MSMSENTRY.EXTRA, MSMSENTRY.TIME_STAMP, MSMSENTRY.USERID)

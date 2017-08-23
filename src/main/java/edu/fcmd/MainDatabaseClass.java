@@ -18,6 +18,8 @@ public class MainDatabaseClass {
 
 	static DatabaseHelper dbHelper;
 
+	static String filePath;
+
 	public static void main(String[] args) {
 
 		logger = Logger.getLogger(MainDatabaseClass.class);
@@ -27,21 +29,25 @@ public class MainDatabaseClass {
 		dbHelper.init("madcapman","!QAZ@WSX");
 		dbHelper.connect();
 
-		//		databaseFBActivity();
-		//		databaseMSMS();
-		//		databaseAppInfo();
+		filePath = "C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\Rel 8-2-17\\json\\";
+
+//		databaseFBActivity();
+		databaseMSMS();
+//		databaseAppInfo();
 		databasePhysicalActivity();
+		databaseLocationEntry();
+		databasePowerInfo();
 	}
 
-	private static void databasePhysicalActivity() {
-		PhysicalActivityData activityData = new PhysicalActivityData(dbHelper.getConnection());
+	private static void databasePowerInfo() {
+		PowerInfoData powerInfoData = new PowerInfoData(dbHelper.getConnection());
 
 		//create table
-		activityData.createTable();
+		powerInfoData.createTable();
 
 		//		insert data into the table
 		try {
-			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\json\\ActivityEntry-000000000000.json");
+			File file = new File(filePath+"PowerEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -54,7 +60,109 @@ public class MainDatabaseClass {
 				//				System.out.println("Json: \n"+ jObject);
 
 				JSONObject innerJobj = (JSONObject) jObject.get("__key__");
-				activityData.insertIntoAll(
+				powerInfoData.insertIntoTable(
+						innerJobj.get("name").toString(), 
+						jObject.get("timestamp").toString(),//.substring(0, 10),
+						jObject.get("userID").toString(),
+						Double.parseDouble(jObject.get("health").toString()),
+						Double.parseDouble(jObject.get("remainingPower").toString()),
+						Double.parseDouble(jObject.get("voltage").toString()),
+						Double.parseDouble(jObject.get("temperature").toString()));
+			}
+
+		} catch (FileNotFoundException e) {
+			logger.error("File not found");
+			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error("I/O exception");
+			e.printStackTrace();
+		} catch (ParseException e) {
+			logger.error("Could not parse for JSON object");
+			e.printStackTrace();
+		} catch (NullPointerException npe){
+			logger.error("Null pointer exception");
+			npe.printStackTrace();
+		}
+
+	}
+
+	private static void databaseLocationEntry() {
+		LocationData locationData = new LocationData(dbHelper.getConnection());
+
+		//create table
+		locationData.createTable();
+
+		//		insert data into the table
+		try {
+			File file = new File(filePath+"LocationEntry-000000000000.json");
+			BufferedReader b = new BufferedReader(new FileReader(file));
+			String readline = "";
+			int count = 0;
+
+			JSONParser jParser = new JSONParser();
+			while((readline = b.readLine()) != null){
+				JSONObject jObject = (JSONObject) jParser.parse(readline);
+
+				logger.info("count: "+ ++count);
+				//				System.out.println("Json: \n"+ jObject);
+
+				JSONObject innerJobj = (JSONObject) jObject.get("__key__");
+				String origin;
+				try{
+					origin = jObject.get("origin").toString();
+				}catch (NullPointerException npe){
+					origin = "UNKNOWN";
+				}
+				locationData.insertIntoTable(
+						innerJobj.get("name").toString(), 
+						jObject.get("timestamp").toString(),//.substring(0, 10),
+						jObject.get("userID").toString(),
+						Double.parseDouble(jObject.get("accuracy").toString()),
+						Double.parseDouble(jObject.get("longitude").toString()),
+						Double.parseDouble(jObject.get("latitude").toString()),
+						Double.parseDouble(jObject.get("bearing").toString()),
+						Double.parseDouble(jObject.get("altitude").toString()),
+						origin);
+			}
+
+		} catch (FileNotFoundException e) {
+			logger.error("File not found");
+			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error("I/O exception");
+			e.printStackTrace();
+		} catch (ParseException e) {
+			logger.error("Could not parse for JSON object");
+			e.printStackTrace();
+		} catch (NullPointerException npe){
+			logger.error("Null pointer exception");
+			npe.printStackTrace();
+		}
+
+	}
+
+	private static void databasePhysicalActivity() {
+		PhysicalActivityData activityData = new PhysicalActivityData(dbHelper.getConnection());
+
+		//create table
+		activityData.createTable();
+
+		//		insert data into the table
+		try {
+			File file = new File(filePath+"ActivityEntry-000000000000.json");
+			BufferedReader b = new BufferedReader(new FileReader(file));
+			String readline = "";
+			int count = 0;
+
+			JSONParser jParser = new JSONParser();
+			while((readline = b.readLine()) != null){
+				JSONObject jObject = (JSONObject) jParser.parse(readline);
+
+				logger.info("count: "+ ++count);
+				//				System.out.println("Json: \n"+ jObject);
+
+				JSONObject innerJobj = (JSONObject) jObject.get("__key__");
+				activityData.insertIntoTable(
 						innerJobj.get("name").toString(),
 						Double.parseDouble(jObject.get("walking").toString()), 
 						Double.parseDouble(jObject.get("still").toString()), 
@@ -85,15 +193,17 @@ public class MainDatabaseClass {
 
 	private static void databaseAppInfo() {
 		AppInfoData appInfo = new AppInfoData(dbHelper.getConnection());
+
+		//		appInfo.createTableIfNot();
 		try {
-			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\json\\ForegroundBackgroundEventEntry-000000000000.json");
+			File file = new File(filePath+"ForegroundBackgroundEventEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 
 			JSONParser jParser = new JSONParser();
 			while((readline = b.readLine()) != null){
 				JSONObject jObject = (JSONObject) jParser.parse(readline);
-				if(appInfo.getAppNameAndCategory(jObject.get("packageName").toString())==0)	logger.debug("SKIP");	
+				if(appInfo.getAppNameAndCategory(jObject.get("packageName").toString())==1)	logger.debug("SKIP");	
 				else appInfo.addAppNameAndCategory(jObject.get("packageName").toString());
 			}
 
@@ -123,7 +233,7 @@ public class MainDatabaseClass {
 		//read josn file and insert into database
 
 		try {
-			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\json\\ForegroundBackgroundEventEntry-000000000000.json");
+			File file = new File(filePath+"ForegroundBackgroundEventEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -140,7 +250,7 @@ public class MainDatabaseClass {
 
 				if(accuracy.equalsIgnoreCase(timestamp)) accuracy = "1";
 
-				foregroundAppData.insertIntoAll(
+				foregroundAppData.insertIntoTable(
 						innerJobj.get("name").toString(),
 						Integer.parseInt(accuracy), 
 						jObject.get("packageName").toString(), 
@@ -175,7 +285,7 @@ public class MainDatabaseClass {
 
 		// read json and insert into database
 		try {
-			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\json\\MSMSEntry-000000000000.json");
+			File file = new File(filePath+"MSMSEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -188,7 +298,7 @@ public class MainDatabaseClass {
 				//				System.out.println("Json: \n"+ jObject);
 
 				JSONObject innerJobj = (JSONObject) jObject.get("__key__");
-				msmsData.insertIntoAll(
+				msmsData.insertIntoTable(
 						innerJobj.get("name").toString(), 
 						jObject.get("action").toString(), 
 						jObject.get("extra").toString(), 

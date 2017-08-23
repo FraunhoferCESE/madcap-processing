@@ -5,7 +5,7 @@ package edu.fcmd.generated.tables;
 
 
 import edu.fcmd.generated.Keys;
-import edu.fcmd.generated.Madcap;
+import edu.fcmd.generated.MadcapP;
 import edu.fcmd.generated.tables.records.ForegroundappentryRecord;
 
 import java.sql.Timestamp;
@@ -35,10 +35,10 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Foregroundappentry extends TableImpl<ForegroundappentryRecord> {
 
-    private static final long serialVersionUID = 783850510;
+    private static final long serialVersionUID = -1251420914;
 
     /**
-     * The reference instance of <code>madcap.foregroundappentry</code>
+     * The reference instance of <code>madcap_p.foregroundappentry</code>
      */
     public static final Foregroundappentry FOREGROUNDAPPENTRY = new Foregroundappentry();
 
@@ -51,44 +51,44 @@ public class Foregroundappentry extends TableImpl<ForegroundappentryRecord> {
     }
 
     /**
-     * The column <code>madcap.foregroundappentry.NAMEID</code>.
+     * The column <code>madcap_p.foregroundappentry.NAMEID</code>.
      */
     public final TableField<ForegroundappentryRecord, String> NAMEID = createField("NAMEID", org.jooq.impl.SQLDataType.VARCHAR.length(40).nullable(false), this, "");
 
     /**
-     * The column <code>madcap.foregroundappentry.ACCURACY</code>.
+     * The column <code>madcap_p.foregroundappentry.ACCURACY</code>.
      */
     public final TableField<ForegroundappentryRecord, Integer> ACCURACY = createField("ACCURACY", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>madcap.foregroundappentry.APPPACKAGE</code>.
+     * The column <code>madcap_p.foregroundappentry.APPPACKAGE</code>.
      */
     public final TableField<ForegroundappentryRecord, String> APPPACKAGE = createField("APPPACKAGE", org.jooq.impl.SQLDataType.VARCHAR.length(50).nullable(false), this, "");
 
     /**
-     * The column <code>madcap.foregroundappentry.TIME_STAMP</code>.
+     * The column <code>madcap_p.foregroundappentry.TIME_STAMP</code>.
      */
     public final TableField<ForegroundappentryRecord, Timestamp> TIME_STAMP = createField("TIME_STAMP", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
-     * The column <code>madcap.foregroundappentry.USERID</code>.
+     * The column <code>madcap_p.foregroundappentry.USERID</code>.
      */
     public final TableField<ForegroundappentryRecord, String> USERID = createField("USERID", org.jooq.impl.SQLDataType.VARCHAR.length(25).nullable(false), this, "");
 
     /**
-     * The column <code>madcap.foregroundappentry.EVENTTYPE</code>.
+     * The column <code>madcap_p.foregroundappentry.EVENTTYPE</code>.
      */
     public final TableField<ForegroundappentryRecord, String> EVENTTYPE = createField("EVENTTYPE", org.jooq.impl.SQLDataType.VARCHAR.length(2).nullable(false), this, "");
 
     /**
-     * Create a <code>madcap.foregroundappentry</code> table reference
+     * Create a <code>madcap_p.foregroundappentry</code> table reference
      */
     public Foregroundappentry() {
         this("foregroundappentry", null);
     }
 
     /**
-     * Create an aliased <code>madcap.foregroundappentry</code> table reference
+     * Create an aliased <code>madcap_p.foregroundappentry</code> table reference
      */
     public Foregroundappentry(String alias) {
         this(alias, FOREGROUNDAPPENTRY);
@@ -107,7 +107,7 @@ public class Foregroundappentry extends TableImpl<ForegroundappentryRecord> {
      */
     @Override
     public Schema getSchema() {
-        return Madcap.MADCAP;
+        return MadcapP.MADCAP_P;
     }
 
     /**

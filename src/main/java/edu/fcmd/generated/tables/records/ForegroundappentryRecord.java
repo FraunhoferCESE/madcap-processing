@@ -30,87 +30,87 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ForegroundappentryRecord extends UpdatableRecordImpl<ForegroundappentryRecord> implements Record6<String, Integer, String, Timestamp, String, String> {
 
-    private static final long serialVersionUID = 1784209478;
+    private static final long serialVersionUID = -326253116;
 
     /**
-     * Setter for <code>madcap.foregroundappentry.NAMEID</code>.
+     * Setter for <code>madcap_p.foregroundappentry.NAMEID</code>.
      */
     public void setNameid(String value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>madcap.foregroundappentry.NAMEID</code>.
+     * Getter for <code>madcap_p.foregroundappentry.NAMEID</code>.
      */
     public String getNameid() {
         return (String) get(0);
     }
 
     /**
-     * Setter for <code>madcap.foregroundappentry.ACCURACY</code>.
+     * Setter for <code>madcap_p.foregroundappentry.ACCURACY</code>.
      */
     public void setAccuracy(Integer value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>madcap.foregroundappentry.ACCURACY</code>.
+     * Getter for <code>madcap_p.foregroundappentry.ACCURACY</code>.
      */
     public Integer getAccuracy() {
         return (Integer) get(1);
     }
 
     /**
-     * Setter for <code>madcap.foregroundappentry.APPPACKAGE</code>.
+     * Setter for <code>madcap_p.foregroundappentry.APPPACKAGE</code>.
      */
     public void setApppackage(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>madcap.foregroundappentry.APPPACKAGE</code>.
+     * Getter for <code>madcap_p.foregroundappentry.APPPACKAGE</code>.
      */
     public String getApppackage() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>madcap.foregroundappentry.TIME_STAMP</code>.
+     * Setter for <code>madcap_p.foregroundappentry.TIME_STAMP</code>.
      */
     public void setTimeStamp(Timestamp value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>madcap.foregroundappentry.TIME_STAMP</code>.
+     * Getter for <code>madcap_p.foregroundappentry.TIME_STAMP</code>.
      */
     public Timestamp getTimeStamp() {
         return (Timestamp) get(3);
     }
 
     /**
-     * Setter for <code>madcap.foregroundappentry.USERID</code>.
+     * Setter for <code>madcap_p.foregroundappentry.USERID</code>.
      */
     public void setUserid(String value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>madcap.foregroundappentry.USERID</code>.
+     * Getter for <code>madcap_p.foregroundappentry.USERID</code>.
      */
     public String getUserid() {
         return (String) get(4);
     }
 
     /**
-     * Setter for <code>madcap.foregroundappentry.EVENTTYPE</code>.
+     * Setter for <code>madcap_p.foregroundappentry.EVENTTYPE</code>.
      */
     public void setEventtype(String value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>madcap.foregroundappentry.EVENTTYPE</code>.
+     * Getter for <code>madcap_p.foregroundappentry.EVENTTYPE</code>.
      */
     public String getEventtype() {
         return (String) get(5);
