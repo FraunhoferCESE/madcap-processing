@@ -115,7 +115,7 @@
 						<target>
 							<!-- The destination package of your generated classes (within the 
 								destination directory) -->
-							<packageName>edu.fcmd.generated.rel</packageName>
+							<packageName>edu.generated.rel</packageName>
 
 							<!-- The destination directory of your generated classes. Using Maven 
 								directory layout here -->

@@ -31,8 +31,8 @@ public class MainDatabaseClassTest {
 	static Logger logger;
 	static DatabaseHelper dbHelper;
 	static DSLContext dslContext;
-	static MSMSData testMsmsData;
-	static ForegroundAppData testfbData;
+	static MSMSEntry testMsmsData;
+	static ForegroundAppEntry testfbData;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -43,8 +43,8 @@ public class MainDatabaseClassTest {
 		dbHelper.init("madcapman","!QAZ@WSX");
 		dbHelper.connect();
 
-		testMsmsData = new MSMSData(dbHelper.getConnection());
-		testfbData = new ForegroundAppData(dbHelper.getConnection());
+		testMsmsData = new MSMSEntry(dbHelper.getConnection());
+		testfbData = new ForegroundAppEntry(dbHelper.getConnection());
 
 		dslContext = DSL.using(dbHelper.getConnection(), SQLDialect.MYSQL);
 	}
@@ -186,46 +186,46 @@ public class MainDatabaseClassTest {
 	//		Result<Record2<String, Integer>> result = testfbData.getNumberOfAppsByUserid();
 	//		System.out.println(result.toString());
 	//	}
-
-	@Test
-	public void getAppNameAndCategoryByTimeTwoDates(){
-		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 01, 01, 0, 0, 0, 0),new Timestamp(0165, 01, 28, 0, 0, 0, 0));
-		System.out.println(result.toString());
-	}
-
-	@Test
-	public void getAppNameAndCategoryByTimeStartDates(){
-		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 02, 28, 0, 0, 0, 0), null);
-		System.out.println(result.toString());
-	}
-
-	@Test
-	public void getAppNameAndCategoryByTimeEndDates(){
-		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, new Timestamp(0165, 01, 28, 0, 0, 0, 0));
-		System.out.println(result.toString());
-	}
-
-	@Test
-	public void getAppNameAndCategoryByTimeNoDates(){
-		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, null);
-		System.out.println(result.toString());
-	}
-	
-	@Test
-	public void getProbablePhysicalActivity(){
-		PhysicalActivityData activityData = new PhysicalActivityData(dbHelper.getConnection());
-		
-		int result = activityData.getPhysicalActivity();
-		System.out.println(result);
-	}
-//	
-//	@Test
-//	public void testGetAppNameAndCategory(){
-//		AppInfoData appData = new AppInfoData(dbHelper.getConnection());
-//		int result = appData.getAppNameAndCategory("com.spotify.music");
-//		System.out.println("com.spotify.music="+result);
-//		
-//		result = appData.getAppNameAndCategory("com.google.android.apps.photos.scanner");
-//		System.out.println("com.UMD.OperationGenovesee="+result);
-//	}
+	//
+	//	@Test
+	//	public void getAppNameAndCategoryByTimeTwoDates(){
+	//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 01, 01, 0, 0, 0, 0),new Timestamp(0165, 01, 28, 0, 0, 0, 0));
+	//		System.out.println(result.toString());
+	//	}
+	//
+	//	@Test
+	//	public void getAppNameAndCategoryByTimeStartDates(){
+	//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(new Timestamp(0165, 02, 28, 0, 0, 0, 0), null);
+	//		System.out.println(result.toString());
+	//	}
+	//
+	//	@Test
+	//	public void getAppNameAndCategoryByTimeEndDates(){
+	//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, new Timestamp(0165, 01, 28, 0, 0, 0, 0));
+	//		System.out.println(result.toString());
+	//	}
+	//
+	//	@Test
+	//	public void getAppNameAndCategoryByTimeNoDates(){
+	//		Result<Record4<String, String, String, Timestamp>> result = testfbData.getAppNameAndCategoryByTime(null, null);
+	//		System.out.println(result.toString());
+	//	}
+	//	
+	//	@Test
+	//	public void getProbablePhysicalActivity(){
+	//		PhysicalActivityEntry activityData = new PhysicalActivityEntry(dbHelper.getConnection());
+	//		
+	//		int result = activityData.getPhysicalActivity();
+	//		System.out.println(result);
+	//	}
+	//	
+	//	@Test
+	//	public void testGetAppNameAndCategory(){
+	//		AppInfoData appData = new AppInfoData(dbHelper.getConnection());
+	//		int result = appData.getAppNameAndCategory("com.spotify.music");
+	//		System.out.println("com.spotify.music="+result);
+	//		
+	//		result = appData.getAppNameAndCategory("com.google.android.apps.photos.scanner");
+	//		System.out.println("com.UMD.OperationGenovesee="+result);
+	//	}
 }

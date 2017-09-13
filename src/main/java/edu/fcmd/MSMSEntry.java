@@ -15,24 +15,22 @@ import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 
-//import static edu.fcmd.generated.tables.Msmsentry.MSMSENTRY;
-import static edu.fcmd.generated.rel.tables.Msmsentry.MSMSENTRY;
+import static edu.generated.rel.tables.Msmsentry.MSMSENTRY;
 
-
-public class MSMSData {
+public class MSMSEntry implements EntryTable{
 
 	static Logger logger;
 
 	Connection connection = null;
 
-	public MSMSData(Connection connection){
+	public MSMSEntry(Connection connection){
 		this.connection = connection;
-		logger = Logger.getLogger(MSMSData.class);
+		logger = Logger.getLogger(MSMSEntry.class);
 	}
 
-	public void createTable(){
+	public void createTableIfNot(){
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
-		
+
 		dslContext.createTableIfNotExists("msmsentry")
 		.column("NAMEID", SQLDataType.VARCHAR(40).nullable(false))
 		.column("ACTION", SQLDataType.VARCHAR(25).nullable(false))
@@ -56,24 +54,24 @@ public class MSMSData {
 		dslContext.close();
 	}
 
-	public void indexMSMS(){
+	public void indexTable(){
 		DSLContext dslContext = DSL.using(connection, SQLDialect.MYSQL);
 
-//		try{
-//			logger.debug("Indexing NAMEID");
-//			dslContext.createIndex("INDEX_NAMEID").on(Msmsentry.MSMSENTRY, Msmsentry.MSMSENTRY.NAMEID).execute();
-//			logger.debug("NAMEID indexed");
-//		}catch (DataAccessException sqlException){
-//			logger.error("ERROR: "+sqlException.getMessage());
-//			logger.debug("NAMEID already indexed");
-//		} //NAMEID is already indexed as PRIMARY KEY
-		
+				try{
+					logger.debug("Indexing NAMEID");
+					dslContext.createIndex("INDEX_NAMEID").on(MSMSENTRY, MSMSENTRY.NAMEID).execute();
+					logger.debug("NAMEID indexed");
+				}catch (DataAccessException sqlException){
+					logger.error("ERROR: "+sqlException.getMessage());
+					logger.debug("NAMEID already indexed");
+				} //NAMEID is already indexed as PRIMARY KEY
+
 		try{
 			logger.debug("Indexing ACTION");
 			dslContext.createIndex("INDEX_ACTION").on(MSMSENTRY, MSMSENTRY.ACTION).execute();
 			logger.debug("ACTION indexed");
 		}catch (DataAccessException sqlException){
-//			logger.error("ERROR: "+sqlException.getMessage());
+			//			logger.error("ERROR: "+sqlException.getMessage());
 			logger.debug("ACTION already indexed");
 		}
 		try{
@@ -81,7 +79,7 @@ public class MSMSData {
 			dslContext.createIndex("INDEX_TIMESTAMP").on(MSMSENTRY, MSMSENTRY.TIME_STAMP).execute();
 			logger.debug("TIME_STAMP indexed");
 		}catch (DataAccessException sqlException){
-//			logger.error("ERROR: "+sqlException.getMessage());
+			//			logger.error("ERROR: "+sqlException.getMessage());
 			logger.debug("TIME_STAMP already indexed");
 		}
 		try{
@@ -89,7 +87,7 @@ public class MSMSData {
 			dslContext.createIndex("INDEX_USERID").on(MSMSENTRY, MSMSENTRY.USERID).execute();
 			logger.debug("USERID indexed");
 		}catch (DataAccessException sqlException){
-//			logger.error("ERROR: "+sqlException.getMessage());
+			//			logger.error("ERROR: "+sqlException.getMessage());
 			logger.debug("USERID already indexed");
 		}
 		dslContext.close();
