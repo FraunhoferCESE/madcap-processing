@@ -11,7 +11,7 @@ import org.jooq.impl.DSL;
 
 public class DatabaseHelper {
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	String DB_URL = "jdbc:mysql://localhost:3306/?useSSL=false";
+	String DB_URL = Constants.dbPath;
 
 	//  Database credentials
 	static String USER;

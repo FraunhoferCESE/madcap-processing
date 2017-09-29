@@ -1,13 +1,16 @@
 package edu.fcmd;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.jooq.tools.json.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -31,8 +34,6 @@ public class MainDatabaseClass {
 
 	static DatabaseHelper dbHelper;
 
-	static String filePath;
-
 	public static void main(String[] args) {
 
 		logger = Logger.getLogger(MainDatabaseClass.class);
@@ -41,8 +42,6 @@ public class MainDatabaseClass {
 		dbHelper = DatabaseHelper.getInstance();
 		dbHelper.init(Constants.dbUser,Constants.dbPass);
 		dbHelper.connect();
-
-		filePath = "C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\Rel 9-8-17\\json\\";
 
 		//		databaseFBActivity();
 		//		databaseMSMS(); 
@@ -62,7 +61,43 @@ public class MainDatabaseClass {
 		//		databaseNetwork();
 		//		databaseNFC();
 
-		databasePostalAddress();
+//				databasePostalAddress();
+		databaseCensusInfo();
+	}
+
+	private static void databaseCensusInfo() {
+		CensusData censusData = new CensusData(dbHelper.getConnection());
+		censusData.createTableIfNot();
+		
+//		double lat = 38.9899434;
+//		double lng = -76.93166;
+//		censusData.addCensusInfo(lat, lng);
+		
+		int count = 0;
+		try{
+			File csvFile = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\31.08-07.09\\location.csv");
+			BufferedReader b = new BufferedReader(new FileReader(csvFile));
+			String readline = "";
+
+			while ((readline = b.readLine()) != null) {
+				String coord[] = readline.split(",");
+				logger.info("count: "+ ++count);
+
+				double lat = Double.parseDouble(coord[0]);
+				double lng = Double.parseDouble(coord[1]);
+								
+//				if(censusData.getCensusInfo(lat,lng) == 1) System.out.println("Census skip");
+//				else 
+					censusData.addCensusInfo(lat, lng);		
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (IndexOutOfBoundsException ioe){
+			ioe.printStackTrace();
+		}
+				
 	}
 
 	private static void databasePostalAddress() {
@@ -72,7 +107,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		//		try {
-		//			File file = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\31.08-07.09\\location1356.json");
+		//			File file = new File(Constants.filePath"location1356.json");
 		//			BufferedReader b = new BufferedReader(new FileReader(file));
 		//			String readline = "";
 		//			int count = 0;
@@ -102,26 +137,28 @@ public class MainDatabaseClass {
 		//			logger.error("Null pointer exception");
 		//			npe.printStackTrace();
 		//		}
-
+		int count = 0;
 		try{
-			File csvFile = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\31.08-07.09\\location1356.csv");
+			File csvFile = new File("C:\\Users\\PGuruprasad\\Desktop\\pocketsecurity_raw\\31.08-07.09\\location.csv");
 			BufferedReader b = new BufferedReader(new FileReader(csvFile));
 			String readline = "";
-			int count = 0;
+
 			while ((readline = b.readLine()) != null) {
 				String coord[] = readline.split(",");
 				logger.info("count: "+ ++count);
 
 				double lat = Double.parseDouble(coord[0]);
 				double lng = Double.parseDouble(coord[1]);
-				if(1 == postalAddressTable.getPostalAddress(lat,lng)) System.out.println("Address skip");
+				if(postalAddressTable.getPostalAddress(lat,lng) == 1) System.out.println("Address skip");
 				else postalAddressTable.addPostalAddress(lat, lng);		
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		} catch (IndexOutOfBoundsException ioe){
+			ioe.printStackTrace();
+		}
 	}
 
 	private static void databaseNFC() {
@@ -132,7 +169,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"NFCEntry-000000000000.json");
+			File file = new File(Constants.filePath+"NFCEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -176,7 +213,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"NetworkEntry-000000000000.json");
+			File file = new File(Constants.filePath+"NetworkEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -221,7 +258,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"CellLocationEntry-000000000000.json");
+			File file = new File(Constants.filePath+"CellLocationEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -266,7 +303,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"CellEntry-000000000000.json");
+			File file = new File(Constants.filePath+"CellEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -310,7 +347,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"CallStateEntry-000000000000.json");
+			File file = new File(Constants.filePath+"CallStateEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -354,7 +391,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"BluetoothStaticAtributesEntry-000000000000.json");
+			File file = new File(Constants.filePath+"BluetoothStaticAtributesEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -399,7 +436,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"BluetoothStateEntry-000000000000.json");
+			File file = new File(Constants.filePath+"BluetoothStateEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -443,7 +480,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"BluetoothScanModeEntry-000000000000.json");
+			File file = new File(Constants.filePath+"BluetoothScanModeEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -487,7 +524,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"BluetoothDiscoveryEntry-000000000000.json");
+			File file = new File(Constants.filePath+"BluetoothDiscoveryEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -531,7 +568,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"BluetoothConnectionEntry-000000000000.json");
+			File file = new File(Constants.filePath+"BluetoothConnectionEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -577,7 +614,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"AirplaneModeEntry-000000000000.json");
+			File file = new File(Constants.filePath+"AirplaneModeEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -619,7 +656,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"PowerEntry-000000000000.json");
+			File file = new File(Constants.filePath+"PowerEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -666,7 +703,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"LocationEntry-000000000000.json");
+			File file = new File(Constants.filePath+"LocationEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -721,7 +758,7 @@ public class MainDatabaseClass {
 
 		//		insert data into the table
 		try {
-			File file = new File(filePath+"ActivityEntry-000000000000.json");
+			File file = new File(Constants.filePath+"ActivityEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -770,7 +807,7 @@ public class MainDatabaseClass {
 
 
 		try {
-			File file = new File(filePath+"ForegroundBackgroundEventEntry-000000000000.json");
+			File file = new File(Constants.filePath+"ForegroundBackgroundEventEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 
@@ -807,7 +844,7 @@ public class MainDatabaseClass {
 		//read josn file and insert into database
 
 		try {
-			File file = new File(filePath+"ForegroundBackgroundEventEntry-000000000000.json");
+			File file = new File(Constants.filePath+"ForegroundBackgroundEventEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
@@ -859,7 +896,7 @@ public class MainDatabaseClass {
 
 		// read json and insert into database
 		try {
-			File file = new File(filePath+"MSMSEntry-000000000000.json");
+			File file = new File(Constants.filePath+"MSMSEntry-000000000000.json");
 			BufferedReader b = new BufferedReader(new FileReader(file));
 			String readline = "";
 			int count = 0;
